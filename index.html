@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ademicon Consórcios | Carlos Eduardo — Consultor de Consórcios e Investimentos</title>
+<meta name="description" content="Planeje sua próxima conquista com consórcio. Agronegócio, imóveis, veículos e investimentos. Simulação personalizada com Carlos Eduardo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="#inicio" class="logo">ADEMICON <span>Consórcios</span></a>
+    <nav class="main-nav">
+      <a href="#inicio">Início</a>
+      <a href="#solucoes">Soluções</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#simulacao">Simulação</a>
+      <a href="#fale-comigo">Fale comigo</a>
+    </nav>
+    <a href="#simulacao" class="btn btn-primary btn-nav">Quero simular</a>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" id="inicio">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <p class="eyebrow">Consultor de Consórcios e Investimentos</p>
+        <h1>Planeje sua próxima conquista com Consórcio</h1>
+        <p class="hero-subtitle">Imóveis, veículos, agronegócio e outras soluções. Faça uma simulação personalizada e descubra uma estratégia adequada ao seu objetivo.</p>
+        <a href="#simulacao" class="btn btn-primary btn-lg">Quero fazer uma simulação</a>
+      </div>
+      <div class="hero-photo">
+        <img src="assets/consultor-agro.jpg" alt="Carlos Eduardo, Consultor de Consórcios e Investimentos, especialista em agronegócio">
+      </div>
+    </div>
+  </section>
+
+  <section class="segmentos" id="solucoes">
+    <div class="container">
+      <p class="section-eyebrow">O que você deseja conquistar?</p>
+      <h2>Escolha seu objetivo</h2>
+      <div class="segmento-grid">
+        <button class="segmento-card" data-segmento="agro">
+          <span class="segmento-icon">🚜</span>
+          <span class="segmento-nome">Agronegócio</span>
+          <span class="segmento-desc">Tratores, colheitadeiras, terras e estrutura</span>
+        </button>
+        <button class="segmento-card" data-segmento="veiculo">
+          <span class="segmento-icon">🚗</span>
+          <span class="segmento-nome">Veículos</span>
+          <span class="segmento-desc">Carro, moto ou caminhão, novo ou usado</span>
+        </button>
+        <button class="segmento-card" data-segmento="imovel">
+          <span class="segmento-icon">🏠</span>
+          <span class="segmento-nome">Imóveis</span>
+          <span class="segmento-desc">Casa, apartamento, terreno ou construção</span>
+        </button>
+        <button class="segmento-card" data-segmento="investimento">
+          <span class="segmento-icon">📈</span>
+          <span class="segmento-nome">Investimento / Patrimônio</span>
+          <span class="segmento-desc">Estratégia de crédito planejado</span>
+        </button>
+        <button class="segmento-card" data-segmento="outros">
+          <span class="segmento-icon">💼</span>
+          <span class="segmento-nome">Outros</span>
+          <span class="segmento-desc">Conte seu objetivo pra gente</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="como-funciona" id="como-funciona">
+    <div class="container">
+      <p class="section-eyebrow">Como funciona</p>
+      <h2>Simples, rápido e personalizado</h2>
+      <div class="passos-grid">
+        <div class="passo">
+          <span class="passo-numero">1</span>
+          <h3>Escolha seu objetivo</h3>
+          <p>Agro, veículo, imóvel, investimento ou outro plano.</p>
+        </div>
+        <div class="passo">
+          <span class="passo-numero">2</span>
+          <h3>Informe o crédito desejado</h3>
+          <p>Você escolhe a faixa de valor que faz sentido pra você.</p>
+        </div>
+        <div class="passo">
+          <span class="passo-numero">3</span>
+          <h3>Receba sua simulação</h3>
+          <p>Uma estratégia personalizada, direto no seu WhatsApp.</p>
+        </div>
+      </div>
+      <div class="porque-consultor">
+        <h3>Por que conversar com um consultor</h3>
+        <p>Atendimento personalizado, análise do seu objetivo e planejamento da estratégia de aquisição — sem letras miúdas.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="formulario-section" id="simulacao">
+    <div class="container">
+      <p class="section-eyebrow">Simulação personalizada</p>
+      <h2>Vamos montar sua estratégia</h2>
+
+      <div class="form-card">
+
+        <div class="progress-bar">
+          <div class="progress-step active" data-progress="1"></div>
+          <div class="progress-step" data-progress="2"></div>
+          <div class="progress-step" data-progress="3"></div>
+          <div class="progress-step" data-progress="4"></div>
+          <div class="progress-step" data-progress="5"></div>
+        </div>
+
+        <form id="simForm" novalidate>
+
+          <div class="form-step active" data-step="1">
+            <h3>O que você deseja conquistar?</h3>
+            <div class="option-grid" id="step1-options">
+              <button type="button" class="option-btn" data-value="agro">🚜 Agronegócio</button>
+              <button type="button" class="option-btn" data-value="veiculo">🚗 Veículo</button>
+              <button type="button" class="option-btn" data-value="imovel">🏠 Imóvel</button>
+              <button type="button" class="option-btn" data-value="investimento">📈 Investimento / Patrimônio</button>
+              <button type="button" class="option-btn" data-value="outros">💼 Outros</button>
+            </div>
+          </div>
+
+          <div class="form-step" data-step="2">
+            <h3>Qual valor de crédito você procura?</h3>
+            <div class="option-grid" id="step2-options">
+              <button type="button" class="option-btn" data-value="Até R$ 50 mil">Até R$ 50 mil</button>
+              <button type="button" class="option-btn" data-value="R$ 50 mil – R$ 100 mil">R$ 50 mil – R$ 100 mil</button>
+              <button type="button" class="option-btn" data-value="R$ 100 mil – R$ 300 mil">R$ 100 mil – R$ 300 mil</button>
+              <button type="button" class="option-btn" data-value="R$ 300 mil – R$ 500 mil">R$ 300 mil – R$ 500 mil</button>
+              <button type="button" class="option-btn" data-value="Acima de R$ 500 mil">Acima de R$ 500 mil</button>
+              <button type="button" class="option-btn" data-value="outro">Quero informar outro valor</button>
+            </div>
+            <div class="campo campo-outro-valor" id="campo-outro-credito" hidden>
+              <label for="outroCredito">Valor desejado (R$)</label>
+              <input type="text" id="outroCredito" inputmode="numeric" placeholder="Ex: 250.000">
+            </div>
+            <div class="step-nav">
+              <button type="button" class="btn btn-ghost" data-action="back">Voltar</button>
+            </div>
+          </div>
+
+          <div class="form-step" data-step="3">
+            <h3>O que você pretende adquirir?</h3>
+            <div class="option-grid" id="step3-options"></div>
+            <div class="step-nav">
+              <button type="button" class="btn btn-ghost" data-action="back">Voltar</button>
+            </div>
+          </div>
+
+          <div class="form-step" data-step="4">
+            <h3>Prazo e recurso disponível</h3>
+            <div class="campo">
+              <label>Quando pretende adquirir?</label>
+              <div class="option-grid option-grid-inline">
+                <button type="button" class="option-btn" data-value="Até 6 meses">Até 6 meses</button>
+                <button type="button" class="option-btn" data-value="6 a 12 meses">6 a 12 meses</button>
+                <button type="button" class="option-btn" data-value="1 a 2 anos">1 a 2 anos</button>
+                <button type="button" class="option-btn" data-value="Ainda estou pesquisando">Ainda estou pesquisando</button>
+              </div>
+            </div>
+            <div class="campo">
+              <label>Possui algum valor disponível para lance?</label>
+              <div class="option-grid option-grid-inline">
+                <button type="button" class="option-btn" data-value="Sim">Sim</button>
+                <button type="button" class="option-btn" data-value="Não">Não</button>
+              </div>
+            </div>
+            <div class="campo campo-lance" id="campo-valor-lance" hidden>
+              <label for="valorLance">Valor aproximado disponível para lance (R$)</label>
+              <input type="text" id="valorLance" inputmode="numeric" placeholder="Ex: 60.000">
+            </div>
+            <div class="step-nav">
+              <button type="button" class="btn btn-ghost" data-action="back">Voltar</button>
+              <button type="button" class="btn btn-primary" data-action="next-4">Próximo</button>
+            </div>
+          </div>
+
+          <div class="form-step" data-step="5">
+            <h3>Últimos dados pra eu te chamar no WhatsApp</h3>
+            <div class="campo">
+              <label for="nome">Nome</label>
+              <input type="text" id="nome" name="nome" required>
+            </div>
+            <div class="campo">
+              <label for="whatsapp">WhatsApp (com DDD)</label>
+              <input type="tel" id="whatsapp" name="whatsapp" placeholder="(77) 99999-9999" required>
+            </div>
+            <div class="campo-linha">
+              <div class="campo">
+                <label for="cidade">Cidade</label>
+                <input type="text" id="cidade" name="cidade" required>
+              </div>
+              <div class="campo">
+                <label for="estado">Estado</label>
+                <select id="estado" name="estado" required>
+                  <option value="">UF</option>
+                  <option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option>
+                  <option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option>
+                  <option>MT</option><option>MS</option><option>MG</option><option>PA</option><option>PB</option>
+                  <option>PR</option><option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+                  <option>RS</option><option>RO</option><option>RR</option><option>SC</option><option>SP</option>
+                  <option>SE</option><option>TO</option>
+                </select>
+              </div>
+            </div>
+            <label class="consentimento">
+              <input type="checkbox" id="consentimento" required>
+              <span>Autorizo o contato via WhatsApp com base nas informações que enviei.</span>
+            </label>
+            <div class="step-nav">
+              <button type="button" class="btn btn-ghost" data-action="back">Voltar</button>
+              <button type="submit" class="btn btn-primary btn-lg">Ver minha simulação</button>
+            </div>
+          </div>
+
+          <div class="form-step form-success" data-step="success">
+            <div class="success-icon">✓</div>
+            <h3 id="successNome">Pronto! Recebi seu objetivo.</h3>
+            <p>Com base nas informações que você enviou, posso preparar uma simulação personalizada pra você.</p>
+            <a href="#" id="whatsappLink" target="_blank" rel="noopener" class="btn btn-primary btn-lg btn-whatsapp">Falar com Carlos no WhatsApp</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="consultor" id="fale-comigo">
+    <div class="container consultor-inner">
+      <img src="assets/consultor-agro.jpg" alt="Carlos Eduardo" class="consultor-foto">
+      <div class="consultor-texto">
+        <p class="section-eyebrow">Quem vai te atender</p>
+        <h2>Carlos Eduardo</h2>
+        <p class="consultor-cargo">Consultor de Consórcios | Agronegócio, Imóveis e Investimentos</p>
+        <p>Atendimento personalizado, análise do seu objetivo e planejamento da estratégia de aquisição — pra você chegar até a sua próxima conquista sem surpresas pelo caminho.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-final">
+    <div class="container">
+      <h2>Quer descobrir qual estratégia combina com seu objetivo?</h2>
+      <a href="#simulacao" class="btn btn-primary btn-lg">Fazer minha simulação</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>ADEMICON Consórcios — Carlos Eduardo, Consultor de Consórcios e Investimentos.</p>
+    <p class="footer-small">Seus dados são usados apenas para preparar sua simulação personalizada e não são compartilhados com terceiros.</p>
+  </div>
+</footer>
+
+<a href="https://wa.me/5577998726668" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 32 32" width="28" height="28" fill="currentColor"><path d="M16 0C7.16 0 0 7.16 0 16c0 2.82.74 5.47 2.03 7.77L0 32l8.42-2.01A15.9 15.9 0 0 0 16 32c8.84 0 16-7.16 16-16S24.84 0 16 0zm0 29.09c-2.53 0-4.9-.7-6.93-1.93l-.5-.3-5.13 1.23 1.26-4.99-.33-.52A13.03 13.03 0 0 1 2.91 16C2.91 8.78 8.78 2.91 16 2.91S29.09 8.78 29.09 16 23.22 29.09 16 29.09zm7.14-9.79c-.39-.2-2.31-1.14-2.67-1.27-.36-.13-.62-.2-.88.2-.26.39-1.01 1.27-1.24 1.53-.23.26-.46.29-.85.1-.39-.2-1.64-.6-3.12-1.92-1.15-1.03-1.93-2.3-2.16-2.69-.23-.39-.02-.6.17-.8.18-.18.39-.46.59-.69.2-.23.26-.39.39-.65.13-.26.07-.49-.03-.69-.1-.2-.88-2.12-1.21-2.9-.32-.76-.64-.66-.88-.67-.23-.01-.49-.01-.75-.01s-.69.1-1.05.49c-.36.39-1.37 1.34-1.37 3.26s1.4 3.78 1.6 4.04c.2.26 2.76 4.21 6.69 5.9.94.4 1.67.65 2.24.83.94.3 1.8.26 2.48.16.76-.11 2.31-.94 2.63-1.85.33-.91.33-1.69.23-1.85-.1-.16-.36-.26-.75-.46z"/></svg>
+</a>
+
+<script src="script.js"></script>
+</body>
+</html>
