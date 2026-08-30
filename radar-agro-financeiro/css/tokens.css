@@ -1,0 +1,51 @@
+:root{
+  /* Superfícies */
+  --bg:#07110D;
+  --panel:#0D1914;
+  --panel-2:#111F19;
+  --panel-raised:#14261D;
+  --border:#20372D;
+  --border-soft:#182A21;
+
+  /* Texto */
+  --text:#EEF6F1;
+  --text-muted:#8CA699;
+  --text-faint:#5B7568;
+
+  /* Marca */
+  --green:#37D67A;
+  --green-institutional:#0FA958;
+  --green-dim:#123322;
+  --gold:#D9B968;
+  --gold-dim:#2A2413;
+
+  /* Semântico */
+  --danger:#E5484D;
+  --danger-dim:#2C1416;
+  --warning:#E0B04A;
+  --warning-dim:#2A2110;
+  --info:#4AA9E0;
+
+  /* Tipografia */
+  --font-sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --font-display:'Manrope','Inter',sans-serif;
+  --font-mono:'JetBrains Mono','SFMono-Regular',Consolas,monospace;
+
+  /* Forma */
+  --radius-sm:8px;
+  --radius-md:12px;
+  --radius-lg:18px;
+  --radius-pill:999px;
+
+  /* Sombra */
+  --shadow-card:0 18px 40px rgba(0,0,0,.28);
+  --shadow-drawer:-24px 0 60px rgba(0,0,0,.45);
+
+  /* Movimento */
+  --ease:cubic-bezier(.4,0,.2,1);
+  --dur-fast:150ms;
+  --dur-base:220ms;
+
+  --sidebar-w:264px;
+  --sidebar-w-collapsed:76px;
+}

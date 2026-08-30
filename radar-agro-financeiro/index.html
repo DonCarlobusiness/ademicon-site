@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terra Oeste | Radar Agro Financeiro</title>
+<meta name="description" content="Plataforma de inteligência financeira e prospecção estratégica para o agronegócio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+</head>
+<body>
+
+<div class="app-shell" id="appShell">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="brand">
+        <div class="brand-mark">TO</div>
+        <div class="brand-copy">
+          <strong>Terra Oeste</strong>
+          <span>Intelligence Platform</span>
+        </div>
+      </div>
+      <button class="sidebar-collapse" id="sidebarCollapse" title="Recolher menu" aria-label="Recolher menu">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <nav class="nav" id="mainNav" aria-label="Navegação principal"></nav>
+
+    <div class="sidebar-footer">
+      <div class="system-status">
+        <span class="status-dot" id="statusDot"></span>
+        <div class="status-copy">
+          <strong>Fontes operacionais</strong>
+          <span id="statusText">Verificando…</span>
+        </div>
+      </div>
+      <div class="user-chip">
+        <div class="user-avatar">CE</div>
+        <div class="user-copy">
+          <strong>Carlos Eduardo</strong>
+          <span>Terra Oeste Agrobusiness</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-col">
+    <header class="topbar">
+      <div class="topbar-heading">
+        <p class="eyebrow" id="viewEyebrow">Radar Agro Financeiro</p>
+        <h1 id="viewTitle">Visão Geral</h1>
+        <p class="sub" id="viewSubtitle">Inteligência financeira e prospecção estratégica para o agronegócio.</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="global-search">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <input id="globalSearch" type="text" placeholder="Buscar empresa, CNPJ, cidade ou CNAE…" autocomplete="off">
+        </div>
+        <button class="btn btn-ghost" id="btnRefresh">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 7A5 5 0 1 1 10.6 3.4M12 7V3M12 7H8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Atualizar dados
+        </button>
+        <button class="btn btn-primary" id="btnImportTop">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8m0 0L4 6m3 3l3-3M2 11v1.5A1.5 1.5 0 0 0 3.5 14h7a1.5 1.5 0 0 0 1.5-1.5V11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Importar base
+        </button>
+        <div class="last-update">
+          <span>Última atualização</span>
+          <strong id="lastUpdateValue">—</strong>
+        </div>
+      </div>
+    </header>
+
+    <main class="view-container" id="viewContainer" aria-live="polite"></main>
+  </div>
+</div>
+
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="dossieDrawer" aria-label="Dossiê empresarial"></aside>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

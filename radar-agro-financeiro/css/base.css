@@ -1,0 +1,33 @@
+*,*::before,*::after{box-sizing:border-box}
+html{color-scheme:dark}
+body{
+  margin:0;
+  font-family:var(--font-sans);
+  background:
+    radial-gradient(circle at 88% -4%, rgba(55,214,122,.07), transparent 32%),
+    radial-gradient(circle at 4% 100%, rgba(217,185,104,.04), transparent 30%),
+    linear-gradient(180deg,#06100c,#08130f 45%,#07110d);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+h1,h2,h3,h4{font-family:var(--font-display);margin:0;letter-spacing:-.02em}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+::selection{background:rgba(55,214,122,.28);color:#fff}
+
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#1c3327;border-radius:99px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:#254433}
+
+:focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:6px}
+
+.tabular{font-variant-numeric:tabular-nums}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+}
