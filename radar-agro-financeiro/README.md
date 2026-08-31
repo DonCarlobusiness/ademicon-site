@@ -7,11 +7,12 @@ radar priorizado por score, e dá suporte a um pipeline comercial (CRM)
 para qualificar oportunidades — **sem nunca inferir automaticamente que
 um passivo público é "dívida rural confirmada"**.
 
-Esta pasta é a v2 do produto: reconstrução completa do protótipo
+Este repositório é a v2 do produto: reconstrução completa do protótipo
 HTML/CSS/JS original (`Radar_Agro_Financeiro_Profissional.html`),
 mantendo 100% de compatibilidade de execução (abre direto num
 navegador, sem build) e elevando o nível de arquitetura, visual e
-integridade de dados.
+integridade de dados. É um projeto separado do site institucional da
+Ademicon — cada um com seu próprio repositório e implantação.
 
 ## Como rodar
 
@@ -20,7 +21,6 @@ servido por HTTP — abrir o `index.html` direto via `file://` não
 funciona (CORS bloqueia os `import`).
 
 ```bash
-cd radar-agro-financeiro
 python3 -m http.server 8080
 # abrir http://localhost:8080
 ```
@@ -28,10 +28,12 @@ python3 -m http.server 8080
 Qualquer outro servidor estático (`npx serve`, `live-server` etc.)
 funciona igualmente. Não há passo de build.
 
+Para publicar em GitHub Pages: Settings → Pages → Source: **Deploy
+from a branch** → branch `main`, pasta `/ (root)`.
+
 ## Estrutura de arquivos
 
 ```
-radar-agro-financeiro/
 ├── index.html                  # shell: sidebar, topbar, containers de view, drawer, toasts
 ├── css/
 │   ├── tokens.css              # paleta, tipografia, raio, sombra, timing — a "fonte da verdade" visual
