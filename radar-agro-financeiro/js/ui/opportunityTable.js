@@ -1,7 +1,7 @@
 import { store } from '../data/store.js';
 import { formatCnpj, isConfirmedRuralDebt, normCnpj } from '../data/schema.js';
 import { scoreTier } from '../services/scoring.js';
-import { esc, formatDate, debounce, scoreBadgeHtml, signalBadgeHtml, emptyStateHtml, skeletonRowsHtml } from './helpers.js';
+import { esc, formatDate, debounce, scoreBadgeHtml, signalBadgeHtml, emptyStateHtml, skeletonRowsHtml, waLink } from './helpers.js';
 import { openDossie } from './dossie.js';
 import { openFiltersPanel } from './filtersPanel.js';
 import { openExportPanel } from './exportPanel.js';
@@ -188,7 +188,9 @@ export function mountOpportunityTable(container, opts) {
     return `<tr class="${selected ? 'selected' : ''}" data-row="${c.id}">
       <td data-label=""><input type="checkbox" class="checkbox" data-select="${c.id}" ${selected ? 'checked' : ''}></td>
       ${columns.map((col) => `<td data-label="${esc(col.label)}" class="${col.key === 'company' ? 'company-cell-td' : ''}">${col.render(c, tier)}</td>`).join('')}
-      <td data-label=""><div class="row-actions"><button class="rowbtn" data-dossie="${c.id}">Ver dossiê</button></div></td>
+      <td data-label=""><div class="row-actions">${waLink(c.whatsapp || c.telefone) ? `<a class="rowbtn" title="Abrir no WhatsApp" target="_blank" rel="noopener" href="${esc(waLink(c.whatsapp || c.telefone))}">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 12l.9-3.3A5 5 0 1 1 7 12.7L2 12z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      </a>` : ''}<button class="rowbtn" data-dossie="${c.id}">Ver dossiê</button></div></td>
     </tr>`;
   }
 

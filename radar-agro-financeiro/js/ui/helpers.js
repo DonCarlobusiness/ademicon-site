@@ -9,6 +9,14 @@ export function formatCurrency(v) {
   return n.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
+/** Gera um link wa.me a partir de um telefone BR em qualquer formatação. Assume DDI 55 quando ausente. */
+export function waLink(phone) {
+  const digits = String(phone || '').replace(/\D/g, '');
+  if (digits.length < 10) return '';
+  const withCountry = digits.length <= 11 ? `55${digits}` : digits;
+  return `https://wa.me/${withCountry}`;
+}
+
 export function formatCurrencyCompact(v) {
   if (!v) return 'R$ 0';
   const n = Number(v);

@@ -109,7 +109,7 @@ td{padding:13px 14px;border-top:1px solid #172c22;font-size:12px;vertical-align:
 .source-link{color:#8cb9a4;text-decoration:none;font-size:11.5px;display:inline-flex;align-items:center;gap:4px}
 .source-link:hover{color:var(--green);text-decoration:underline}
 .row-actions{display:flex;gap:6px}
-.rowbtn{background:#10261b;border:1px solid #28513d;color:#baf0cf;border-radius:8px;padding:7px 10px;font-size:11.5px;font-weight:600}
+.rowbtn{display:inline-flex;align-items:center;gap:6px;background:#10261b;border:1px solid #28513d;color:#baf0cf;border-radius:8px;padding:7px 10px;font-size:11.5px;font-weight:600;text-decoration:none}
 .rowbtn:hover{background:#153623}
 
 .table-footbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 20px;border-top:1px solid var(--border);flex-wrap:wrap}

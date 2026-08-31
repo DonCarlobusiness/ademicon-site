@@ -1,7 +1,7 @@
 import { store } from '../data/store.js';
 import { formatCnpj, isConfirmedRuralDebt, CRM_STAGES } from '../data/schema.js';
 import { scoreTier } from '../services/scoring.js';
-import { esc, formatDate, formatCurrency, toast, scoreBadgeHtml, ruralDebtBadgeHtml } from './helpers.js';
+import { esc, formatDate, formatCurrency, toast, scoreBadgeHtml, ruralDebtBadgeHtml, waLink } from './helpers.js';
 
 const backdrop = document.getElementById('drawerBackdrop');
 const drawer = document.getElementById('dossieDrawer');
@@ -120,13 +120,27 @@ function signalsTab(c, confirmed) {
 }
 
 function contactsTab(c) {
+  const waPhone = waLink(c.whatsapp || c.telefone);
+  const mailtoLink = c.email ? `mailto:${c.email}` : '';
   return `<div class="detail-grid">
     ${item('Telefone empresarial', c.telefone || 'Não carregado')}
     ${item('WhatsApp empresarial', c.whatsapp || 'Não carregado')}
     ${item('E-mail empresarial', c.email || 'Não carregado')}
     ${item('Site', c.site || 'Não informado')}
     ${item('Canais corporativos', 'Priorize sempre canais empresariais públicos. Este sistema não busca telefone pessoal oculto.', true)}
-  </div>`;
+  </div>
+  ${(waPhone || mailtoLink) ? `
+  <div class="divider"></div>
+  <div style="display:flex;gap:9px;flex-wrap:wrap">
+    ${waPhone ? `<a class="btn btn-primary" target="_blank" rel="noopener" href="${esc(waPhone)}">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 12l.9-3.3A5 5 0 1 1 7 12.7L2 12z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      Abrir no WhatsApp
+    </a>` : ''}
+    ${mailtoLink ? `<a class="btn" href="${esc(mailtoLink)}">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="3" width="11" height="8" rx="1.3" stroke="currentColor" stroke-width="1.3"/><path d="M2 4l5 3.5L12 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Enviar e-mail
+    </a>` : ''}
+  </div>` : ''}`;
 }
 
 function sourcesTab(c) {
