@@ -19,7 +19,7 @@
       crm_events: [], demos: [], proposals: [], messages: [],
       settings: {
         tema: 'light',
-        consultor: { nome: 'Carlos Eduardo', empresa: 'SiteHunter AI', telefone: '', email: '' },
+        consultor: { nome: '', empresa: '', telefone: '', email: '' },
         pacotes: null,
         lgpdAceito: false,
         optOut: []
@@ -221,6 +221,12 @@
         u = { id: uid('usr'), nome: 'Consultor Demonstração', email: 'demo@sitehunter.ai',
               senha_hash: hashSimples('demo1234'), created_at: agora() };
         db.users.push(u);
+      }
+      /* Preenche a assinatura só se ainda estiver vazia, para a demonstração não
+         nascer com "[seu nome]" nas abordagens. Ajustável em Configurações. */
+      if (!db.settings.consultor.nome) {
+        db.settings.consultor = { nome: 'Consultor Demonstração', empresa: 'Sua Agência',
+                                  telefone: '', email: 'demo@sitehunter.ai' };
       }
       db.session = { user_id: u.id, iniciada_em: agora() };
       gravar();

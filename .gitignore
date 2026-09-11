@@ -1,0 +1,13 @@
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Não há build: nada gerado deve entrar no repositório
+node_modules/
+dist/
+.cache/

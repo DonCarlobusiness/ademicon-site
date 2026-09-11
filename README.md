@@ -2,6 +2,9 @@
 
 > Nome provisório do produto.
 
+Produto independente, sem vínculo com qualquer outro site ou marca. Ocupa a raiz
+do repositório e é publicado como site próprio.
+
 Aplicativo web SaaS para encontrar empresas com baixa presença digital — sobretudo as
 que ainda **não possuem site** —, classificá-las por potencial comercial, gerar uma
 abordagem personalizada, criar um site de demonstração e conduzir a venda até o
@@ -18,16 +21,29 @@ Não há etapa de build. Basta servir a pasta por HTTP:
 ```bash
 # a partir da raiz do repositório
 python3 -m http.server 8000
-# abra http://localhost:8000/sitehunter/
+# abra http://localhost:8000/
 ```
 
 Também funciona em qualquer hospedagem estática (GitHub Pages, Netlify, Vercel,
-cPanel, S3). Abrir o `index.html` diretamente pelo sistema de arquivos igualmente
-funciona, porque os scripts são clássicos — sem módulos ES nem bundler.
+cPanel, S3): publique a raiz do repositório e pronto — não há comando de build
+nem diretório de saída. Abrir o `index.html` diretamente pelo sistema de arquivos
+igualmente funciona, porque os scripts são clássicos — sem módulos ES nem bundler.
 
 **Acesso:** na tela de login, clique em **"Entrar com conta de demonstração"**.
 A base já vem com 30 empresas fictícias, leads distribuídos pelo funil,
 demonstrações e propostas de exemplo.
+
+### Publicar como site próprio
+
+| Hospedagem | Configuração |
+|---|---|
+| GitHub Pages | Settings → Pages → Branch: este branch, pasta `/ (root)` |
+| Netlify | Build command: *(vazio)* · Publish directory: `.` |
+| Vercel | Framework: *Other* · Build: *(vazio)* · Output: `.` |
+| cPanel / FTP | Envie todos os arquivos para `public_html/` |
+
+O roteamento é por hash (`#/app/radar`), então nenhuma regra de reescrita de URL
+é necessária no servidor.
 
 ---
 
@@ -110,8 +126,11 @@ projeto, não uma preferência de estilo:
 ## Arquitetura
 
 ```
-sitehunter/
+.
 ├── index.html            # shell; carrega os scripts em ordem
+├── icon.svg              # ícone do site e do manifesto
+├── site.webmanifest      # instalação como aplicativo no celular
+├── robots.txt
 ├── css/app.css           # design system completo (claro + escuro)
 ├── db/schema.sql         # esquema PostgreSQL/Supabase equivalente ao store
 └── js/

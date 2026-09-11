@@ -1,0 +1,6 @@
+# SiteHunter AI
+User-agent: *
+Allow: /
+
+# As páginas de demonstração geradas para clientes não devem ser indexadas.
+# Elas já trazem <meta name="robots" content="noindex,nofollow"> no próprio HTML.
