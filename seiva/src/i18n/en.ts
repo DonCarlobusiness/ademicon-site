@@ -14,10 +14,14 @@ export const en: Record<keyof typeof ptBR, string> = {
   onboardingDone:
     'All set, {name}! Field of {area} ha of {crop} in {municipality} registered.\n\nYou can send me:\n- a photo of the leaf so I can check pest or disease\n- a voice note with your question\n- "how is my field" for the satellite map\n- "will it rain?" for your local weather',
 
+  onboardingDoneNoCity:
+    'All set, {name}! Field of {area} ha of {crop} registered.\n\nYou can send me:\n- a photo of the leaf so I can check pest or disease\n- a voice note with your question\n- "how is my field" for the satellite map\n- "will it rain?" for your local weather',
   noFieldYet: "I don't have your field registered yet. Send me the location (pin) and I'll register it right away.",
   noClearPass:
     "There was no cloud-free satellite pass over your field in the last {days} days, so I have no reliable image right now. I'll tell you as soon as it clears.",
+  rateLimited: "That's a lot of messages in a short time and I need a breather. Try again in a little while.",
   genericError: 'Something broke on my side. Try again in a few minutes.',
+  documentTooBig: "That file is too big for me to open. Send a photo of the report page and I'll read it just the same.",
   unsupportedMedia: "I couldn't open that file. Send it as a photo, voice note or text and I'll handle it.",
   audioTranscriptionFailed: "I didn't catch that audio. Could you repeat it closer to the phone?",
 

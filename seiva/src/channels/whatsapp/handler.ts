@@ -3,7 +3,8 @@ import { logger } from '../../lib/logger.js';
 import { env } from '../../config/env.js';
 import { t, detectLocale } from '../../i18n/index.js';
 import {
-  claimMessage, deleteProducer, findOrCreateProducer, getPrimaryField, updateProducer,
+  claimMessage, countRecentUserMessages, deleteProducer, findOrCreateProducer,
+  getPrimaryField, updateProducer,
 } from '../../db/repo.js';
 import { downloadMedia, markTyping, sendText } from './client.js';
 import { handleOnboarding, maybeRegisterFieldFromPin } from './onboarding.js';
@@ -12,6 +13,14 @@ import { transcribe } from '../../services/media/stt.js';
 import { runAgent } from '../../agent/runner.js';
 
 const SUPPORTED_IMAGE = new Set(['image/jpeg', 'image/png', 'image/webp']);
+/**
+ * Teto de mensagens por produtor por hora. Um produtor de verdade nao passa
+ * nem perto disso; o limite existe para um loop ou um numero abusivo nao
+ * virar conta de API.
+ */
+const MAX_MESSAGES_PER_HOUR = 60;
+/** Limite da Files/Messages API para PDF em base64 no corpo da requisicao. */
+const MAX_PDF_BYTES = 20 * 1024 * 1024;
 const DELETE_REQUEST = /apagar meus dados|borrar mis datos|delete my data/i;
 
 /**
@@ -54,6 +63,13 @@ export async function handleInbound(inbound: InboundMessage): Promise<void> {
       return;
     }
 
+    // 2b. Limite de uso por produtor.
+    if (await countRecentUserMessages(producer.id) >= MAX_MESSAGES_PER_HOUR) {
+      logger.warn({ producerId: producer.id }, 'produtor atingiu o limite por hora');
+      await sendText(inbound.waId, t(locale, 'rateLimited'));
+      return;
+    }
+
     // 3. Ajusta o idioma se o produtor mudou de lingua.
     const detected = detectLocale(text, locale);
     if (detected !== producer.locale) {
@@ -90,8 +106,23 @@ export async function handleInbound(inbound: InboundMessage): Promise<void> {
       }
     }
 
-    if (inbound.kind === 'document' || inbound.kind === 'unsupported') {
-      // Laudo de solo em PDF entra na fase 2 (OCR); por ora avisamos.
+    // 6b. PDF (tipicamente o laudo de solo) vai como bloco de documento.
+    const documents: { base64: string; filename: string }[] = [];
+    if (inbound.kind === 'document' && inbound.mediaId) {
+      const media = await downloadMedia(inbound.mediaId);
+      if (media.mimeType === 'application/pdf') {
+        if (media.buffer.byteLength > MAX_PDF_BYTES) {
+          await sendText(inbound.waId, t(activeLocale, 'documentTooBig'));
+          return;
+        }
+        documents.push({ base64: media.buffer.toString('base64'), filename: 'laudo.pdf' });
+      } else {
+        await sendText(inbound.waId, t(activeLocale, 'unsupportedMedia'));
+        return;
+      }
+    }
+
+    if (inbound.kind === 'unsupported') {
       await sendText(inbound.waId, t(activeLocale, 'unsupportedMedia'));
       return;
     }
@@ -102,14 +133,15 @@ export async function handleInbound(inbound: InboundMessage): Promise<void> {
       ? `[O produtor enviou a localizacao: ${inbound.location.lat.toFixed(5)}, ${inbound.location.lon.toFixed(5)}]`
       : null;
 
-    if (!text && images.length === 0 && !locationNote) return;
+    if (!text && images.length === 0 && documents.length === 0 && !locationNote) return;
 
     const reply = await runAgent({
       producer,
       field,
       locale: activeLocale,
-      userContent: buildUserContent({ text, images, locationNote }),
+      userContent: buildUserContent({ text, images, documents, locationNote }),
       images,
+      documents,
     });
 
     await deliverReply(inbound.waId, reply, inbound.kind, activeLocale);

@@ -10,22 +10,36 @@ Funciona por **texto, áudio e foto**. Áudio é respondido com áudio.
 
 ---
 
-## Como rodar
+## Começar
+
+**[SETUP.md](./SETUP.md) tem o passo a passo completo.** O resumo:
 
 ```bash
-cp .env.example .env      # preencha as chaves
-docker compose up -d db redis
-npm install
-npm run build
-npm run migrate           # cria o schema PostGIS
-npm run dev
+cp .env.example .env          # só ANTHROPIC_API_KEY é obrigatória para começar
+docker compose up -d db
+npm install && npm run migrate
+npm run doctor                # diz exatamente o que ainda falta
+npm run chat                  # conversa com o agente no terminal
 ```
 
-Testes (não fazem chamada de rede):
+`npm run chat` roda o agente inteiro sem WhatsApp — mesmo onboarding, mesmas
+ferramentas, mesmas respostas. Dá para validar o produto antes de encarar a
+aprovação da Meta, que leva dias.
+
+`npm run doctor` testa cada integração de verdade (autentica na Anthropic,
+conecta no Postgres, chama a Graph API) e separa o que **bloqueia** do que só
+**degrada**.
+
+### Testes
 
 ```bash
-npm test
+npm test          # unitários, sem rede e sem banco
+DATABASE_URL=postgres://seiva:seiva@localhost:5432/seiva npm run test:db
 ```
+
+Os testes de banco rodam contra Postgres+PostGIS real. Pegam coisas que teste
+unitário não pega: coluna ambígua em JOIN, inversão de lat/lon no
+`ST_MakePoint`, cascade da exclusão LGPD.
 
 ### Ligando o webhook da Meta
 
@@ -47,8 +61,11 @@ npm test
 | Diagnóstico por foto com nível de confiança | `src/agent/tools/diagnosePhoto.ts` |
 | Adubação NPK + calagem | `src/services/agronomy/fertilizer.ts` |
 | Clima 7 dias + janela de aplicação | `src/services/weather/` |
+| Leitura do laudo de solo (foto ou PDF) | `src/agent/tools/readSoilReport.ts` |
 | Alertas proativos (geada, chuva forte, seca, queda de NDVI) | `src/jobs/proactive.ts` |
 | pt-BR, es-419, en | `src/i18n/` |
+| Diagnóstico de configuração | `src/scripts/doctor.ts` |
+| Conversa por terminal, sem WhatsApp | `src/scripts/chat.ts` |
 
 Preço spot (`market_price`) está implementado mas **desligado por padrão**: sem um
 feed contratado ele retorna "não tenho cotação" em vez de chutar um número que o
@@ -104,12 +121,24 @@ jobs/proactive.ts ── BullMQ, varredura diária 09:00 UTC ──► alertas
 
 ## O que falta para produção
 
-- **OCR do laudo de solo** (`kind === 'document'` hoje responde "não consigo abrir").
-  Sem ele a adubação usa estimativa regional, que é bem menos precisa.
-- **STT/TTS**: `STT_PROVIDER`/`TTS_PROVIDER` vêm desligados. Sem STT o áudio do
-  produtor não é transcrito — é a via preferida do público-alvo, então é a
-  primeira integração a ligar.
-- **Fallback Planetary Computer** para satélite e **INMET** para clima.
-- **Estado do onboarding em Redis** — hoje o pin entre duas mensagens fica em
-  memória do processo, o que só é correto rodando uma instância.
-- **Rate limit por produtor**, para custo de API não escalar com mensagem repetida.
+Nada disso bloqueia o sistema de atender — são melhorias.
+
+- **Fallback Planetary Computer** para satélite e **INMET** para clima. Hoje,
+  se o Sentinel Hub cair, o NDVI simplesmente fica indisponível (o agente diz
+  isso, não inventa).
+- **Templates de mensagem aprovados na Meta** para os alertas proativos: fora
+  da janela de 24 h só se envia template. Sem isso o alerta de geada só chega
+  a quem falou com o bot recentemente.
+- **Agendador BullMQ em worker dedicado** se rodar mais de uma instância —
+  hoje toda instância sobe o scheduler.
+- **Feed de preço spot** (`MARKET_PRICE_BASE_URL`). Sem contrato, o agente
+  responde "não tenho cotação" em vez de chutar.
+
+### Limitações conhecidas
+
+- Reverse geocoding usa Nominatim (1 req/s, exige User-Agent). Em volume,
+  troque por provedor contratado ou pelo shapefile do IBGE. Quando falha, o
+  cadastro segue sem o município.
+- As imagens de áudio (`--profile audio`) não foram exercitadas neste
+  ambiente porque o registry estava bloqueado; o cliente HTTP dos dois
+  serviços segue o formato OpenAI, que é o que essas imagens expõem.

@@ -1,6 +1,8 @@
 import type { Crop, InboundMessage, Locale, Producer } from '../../domain/types.js';
 import { t } from '../../i18n/index.js';
-import { createField, getPrimaryField, updateProducer } from '../../db/repo.js';
+import {
+  clearOnboardingData, createField, getPrimaryField, patchOnboardingData, updateProducer,
+} from '../../db/repo.js';
 import { reverseGeocode } from '../../services/geocode.js';
 import { logger } from '../../lib/logger.js';
 
@@ -89,14 +91,17 @@ export async function handleOnboarding(
       });
       // Guardamos o pin em memoria do passo seguinte via o proprio talhao,
       // criado so quando soubermos cultura e area.
-      pendingPins.set(producer.id, inbound.location);
+      await patchOnboardingData(producer.id, {
+        pendingLat: inbound.location.lat,
+        pendingLon: inbound.location.lon,
+      });
       return { handled: true, reply: t(locale, 'askCrop') };
     }
 
     case 'crop': {
       if (!text) return { handled: true, reply: t(locale, 'askCrop') };
       const crop = parseCrop(text) ?? 'outro';
-      pendingCrops.set(producer.id, crop);
+      await patchOnboardingData(producer.id, { pendingCrop: crop });
       await updateProducer(producer.id, { onboardingStep: 'area' });
       return { handled: true, reply: t(locale, 'askArea') };
     }
@@ -106,28 +111,33 @@ export async function handleOnboarding(
       const areaHa = parseArea(text);
       if (areaHa === null) return { handled: true, reply: t(locale, 'askArea') };
 
-      const centroid = pendingPins.get(producer.id);
-      if (!centroid) {
-        // Perdemos o pin (reinicio do processo). Pede de novo em vez de inventar.
+      const { pendingLat, pendingLon, pendingCrop } = producer.onboardingData;
+      if (pendingLat === undefined || pendingLon === undefined) {
+        // Sem pin gravado nao da para cadastrar talhao: pede de novo em vez
+        // de inventar uma coordenada.
         await updateProducer(producer.id, { onboardingStep: 'location' });
         return { handled: true, reply: t(locale, 'askLocation') };
       }
-      const crop = pendingCrops.get(producer.id) ?? 'outro';
 
-      await createField({ producerId: producer.id, crop, areaHa, centroid });
+      await createField({
+        producerId: producer.id,
+        crop: pendingCrop ?? 'outro',
+        areaHa,
+        centroid: { lat: pendingLat, lon: pendingLon },
+      });
       const updated = await updateProducer(producer.id, { onboardingStep: 'done' });
-      pendingPins.delete(producer.id);
-      pendingCrops.delete(producer.id);
+      await clearOnboardingData(producer.id);
+      const crop = pendingCrop ?? 'outro';
 
       logger.info({ producerId: producer.id, crop, areaHa }, 'onboarding concluido');
+      // Sem municipio (geocode falhou) usamos a variante sem cidade — melhor
+      // do que confirmar "talhao em -" para o produtor.
+      const vars = { name: updated.name ?? '', area: areaHa, crop };
       return {
         handled: true,
-        reply: t(locale, 'onboardingDone', {
-          name: updated.name ?? '',
-          area: areaHa,
-          crop,
-          municipality: updated.municipality ?? '-',
-        }),
+        reply: updated.municipality
+          ? t(locale, 'onboardingDone', { ...vars, municipality: updated.municipality })
+          : t(locale, 'onboardingDoneNoCity', vars),
       };
     }
 
@@ -156,16 +166,6 @@ export async function maybeRegisterFieldFromPin(
   });
   return true;
 }
-
-/**
- * Estado transitorio do onboarding (pin e cultura entre duas mensagens).
- *
- * Em memoria de proposito: sao segundos de vida e nada aqui e critico — se o
- * processo reiniciar, o fluxo volta a pedir o pin. Ao rodar mais de uma
- * instancia, mover para Redis.
- */
-const pendingPins = new Map<string, { lat: number; lon: number }>();
-const pendingCrops = new Map<string, Crop>();
 
 function cleanName(text: string): string | null {
   const cleaned = text

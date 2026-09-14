@@ -1,6 +1,7 @@
 import { query } from './pool.js';
 import type {
-  Crop, Field, GeoJSONPolygon, LatLon, Locale, OnboardingStep, Producer, SoilAnalysis,
+  Crop, Field, GeoJSONPolygon, LatLon, Locale, OnboardingData, OnboardingStep,
+  Producer, SoilAnalysis,
 } from '../domain/types.js';
 import type Anthropic from '@anthropic-ai/sdk';
 
@@ -9,7 +10,7 @@ import type Anthropic from '@anthropic-ai/sdk';
 interface ProducerRow {
   id: string; wa_id: string; name: string | null; municipality: string | null;
   uf: string | null; locale: string; lgpd_consent_at: Date | null;
-  onboarding_step: string; created_at: Date;
+  onboarding_step: string; onboarding_data: OnboardingData | null; created_at: Date;
 }
 
 function toProducer(r: ProducerRow): Producer {
@@ -22,8 +23,28 @@ function toProducer(r: ProducerRow): Producer {
     locale: r.locale as Locale,
     lgpdConsentAt: r.lgpd_consent_at,
     onboardingStep: r.onboarding_step as OnboardingStep,
+    onboardingData: r.onboarding_data ?? {},
     createdAt: r.created_at,
   };
+}
+
+/**
+ * Grava o estado transitorio do onboarding (pin, cultura). Faz merge no
+ * jsonb em vez de sobrescrever, para dois passos seguidos nao se apagarem.
+ */
+export async function patchOnboardingData(
+  id: string, patch: OnboardingData,
+): Promise<void> {
+  await query(
+    `UPDATE producers
+        SET onboarding_data = onboarding_data || $2::jsonb, updated_at = now()
+      WHERE id = $1`,
+    [id, JSON.stringify(patch)],
+  );
+}
+
+export async function clearOnboardingData(id: string): Promise<void> {
+  await query(`UPDATE producers SET onboarding_data = '{}'::jsonb WHERE id = $1`, [id]);
 }
 
 /** Cria na primeira mensagem. Nesse ponto so existe o telefone. */
@@ -88,12 +109,17 @@ function toField(r: FieldRow): Field {
   };
 }
 
-const FIELD_SELECT = `
-  id, producer_id, name, crop, area_ha,
-  ST_Y(centroid::geometry) AS lat,
-  ST_X(centroid::geometry) AS lon,
-  ST_AsGeoJSON(geom) AS geom,
-  planted_at`;
+/**
+ * Colunas do talhao, SEMPRE qualificadas pelo alias. Sem o alias, qualquer
+ * join com `producers` torna `id`, `name` e `created_at` ambiguos e o
+ * Postgres recusa a query (42702).
+ */
+const fieldSelect = (alias: string): string => `
+  ${alias}.id, ${alias}.producer_id, ${alias}.name, ${alias}.crop, ${alias}.area_ha,
+  ST_Y(${alias}.centroid::geometry) AS lat,
+  ST_X(${alias}.centroid::geometry) AS lon,
+  ST_AsGeoJSON(${alias}.geom) AS geom,
+  ${alias}.planted_at`;
 
 export async function createField(input: {
   producerId: string; name?: string; crop: Crop; areaHa: number;
@@ -108,7 +134,7 @@ export async function createField(input: {
                     ELSE ST_SetSRID(ST_GeomFromGeoJSON($7), 4326)::geography END)
        RETURNING *
      )
-     SELECT ${FIELD_SELECT} FROM inserted`,
+     SELECT ${fieldSelect('inserted')} FROM inserted`,
     [
       input.producerId,
       input.name ?? 'Talhao 1',
@@ -124,7 +150,8 @@ export async function createField(input: {
 
 export async function getPrimaryField(producerId: string): Promise<Field | null> {
   const rows = await query<FieldRow>(
-    `SELECT ${FIELD_SELECT} FROM fields WHERE producer_id = $1 ORDER BY created_at ASC LIMIT 1`,
+    `SELECT ${fieldSelect('f')} FROM fields f
+      WHERE f.producer_id = $1 ORDER BY f.created_at ASC LIMIT 1`,
     [producerId],
   );
   return rows[0] ? toField(rows[0]) : null;
@@ -132,9 +159,10 @@ export async function getPrimaryField(producerId: string): Promise<Field | null>
 
 export async function listAllFields(): Promise<(Field & { waId: string; locale: Locale })[]> {
   const rows = await query<FieldRow & { wa_id: string; locale: string }>(
-    `SELECT ${FIELD_SELECT}, p.wa_id, p.locale
+    `SELECT ${fieldSelect('f')}, p.wa_id, p.locale
        FROM fields f JOIN producers p ON p.id = f.producer_id
-      WHERE p.lgpd_consent_at IS NOT NULL`,
+      WHERE p.lgpd_consent_at IS NOT NULL
+      ORDER BY f.created_at ASC`,
   );
   return rows.map((r) => ({ ...toField(r), waId: r.wa_id, locale: r.locale as Locale }));
 }
@@ -169,6 +197,23 @@ export async function loadHistory(producerId: string, limit = 30): Promise<Anthr
   }));
   while (msgs.length > 0 && msgs[0]!.role !== 'user') msgs.shift();
   return msgs;
+}
+
+/**
+ * Quantas mensagens o produtor mandou na ultima hora.
+ *
+ * Usa a propria tabela de conversa em vez de um contador separado: o dado ja
+ * esta la, e assim o limite vale para todas as instancias do app sem precisar
+ * de Redis.
+ */
+export async function countRecentUserMessages(producerId: string, withinMinutes = 60): Promise<number> {
+  const rows = await query<{ n: string }>(
+    `SELECT count(*)::text AS n FROM conversations
+      WHERE producer_id = $1 AND role = 'user'
+        AND created_at > now() - ($2 || ' minutes')::interval`,
+    [producerId, String(withinMinutes)],
+  );
+  return Number(rows[0]?.n ?? 0);
 }
 
 // ------------------------------------------------------------- idempotencia

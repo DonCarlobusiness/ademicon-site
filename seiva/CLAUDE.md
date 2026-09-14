@@ -47,7 +47,7 @@ Estas regras são verificáveis em código. Não relaxe nenhuma delas.
 - **Backend**: Node.js + TypeScript + Fastify. *(Escolhido em vez de FastAPI porque a spec
   pede BullMQ para filas, que é Node-only. Não misturar runtimes.)*
 - **IA**: Anthropic API (Claude) com tool use — `get_ndvi`, `get_weather`, `diagnose_photo`,
-  `fertilizer_calc`, `market_price`.
+  `fertilizer_calc`, `market_price`, `read_soil_report`.
 - **Satélite**: Sentinel Hub (Copernicus); fallback Planetary Computer.
 - **Clima**: Open-Meteo (grátis) com fallback INMET.
 - **Áudio**: Whisper (STT) + TTS pt-BR.
@@ -78,15 +78,29 @@ db/migrations/          SQL (PostGIS)
 - Ferramentas do agente retornam `ToolResult` discriminado (`ok: true | false`), nunca lançam.
   Uma falha vira texto honesto para o modelo, não uma alucinação.
 - Toda string voltada ao produtor vem de `src/i18n/` — nunca hardcode pt-BR na lógica.
+  Os três dicionários têm que ter exatamente as mesmas chaves e os mesmos
+  placeholders; há teste que falha se divergirem.
+- Consultas com JOIN em `fields` precisam qualificar as colunas pelo alias:
+  `id`, `name` e `created_at` existem em `fields` E em `producers`, e sem o
+  alias o Postgres recusa a query (42702).
+- Estado que precisa sobreviver entre duas mensagens vai para o banco, nunca
+  para um Map em memória: o processo reinicia e pode haver mais de uma instância.
 - Modelo: `claude-opus-5` com `thinking: { type: 'adaptive' }`. Não usar `budget_tokens`
   (removido nesta geração, retorna 400).
 
 ## 9. Comandos
 ```bash
 npm install
+npm run doctor     # o que falta configurar (testa cada integracao de verdade)
+npm run chat       # conversa com o agente no terminal, sem WhatsApp
+npm run migrate    # aplica db/migrations
 npm run dev        # Fastify com reload
-npm run build      # tsc
+npm run build      # tsc (compila src + tests para dist/)
 npm run typecheck  # tsc --noEmit
-npm run test       # node --test
-docker compose up  # postgres+postgis, redis, app
+npm test           # unitarios (sem rede, sem banco)
+npm run test:db    # + integracao contra Postgres real (precisa DATABASE_URL)
+docker compose up -d db redis
+docker compose --profile audio up -d stt tts   # Whisper + Piper
 ```
+
+Passo a passo de credenciais: `SETUP.md`.

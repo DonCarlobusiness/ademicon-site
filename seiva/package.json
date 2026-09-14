@@ -13,7 +13,10 @@
     "start": "node dist/src/index.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "npm run build && node --env-file=tests/test.env --test \"dist/tests/**/*.test.js\"",
-    "migrate": "node dist/src/scripts/migrate.js"
+    "migrate": "node dist/src/scripts/migrate.js",
+    "test:db": "npm run build && SEIVA_TEST_DB=1 node --env-file=tests/test.env --test \"dist/tests/**/*.test.js\"",
+    "doctor": "npm run build && node --env-file-if-exists=.env dist/src/scripts/doctor.js",
+    "chat": "npm run build && node --env-file-if-exists=.env dist/src/scripts/chat.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.125.0",

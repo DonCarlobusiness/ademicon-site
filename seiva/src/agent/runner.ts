@@ -34,6 +34,7 @@ export async function runAgent(params: {
   locale: Locale;
   userContent: Anthropic.MessageParam['content'];
   images?: ToolContext['pendingImages'];
+  documents?: ToolContext['pendingDocuments'];
 }): Promise<AgentReply> {
   const { producer, field, locale, userContent } = params;
 
@@ -42,6 +43,7 @@ export async function runAgent(params: {
     field,
     locale,
     pendingImages: params.images ?? [],
+    pendingDocuments: params.documents ?? [],
     attachments: [],
     satelliteToolSucceeded: false,
   };

@@ -33,5 +33,29 @@ services:
       db: { condition: service_healthy }
       redis: { condition: service_healthy }
 
+  # Perfil "audio": docker compose --profile audio up -d
+  # Fica fora do up padrao porque os modelos sao pesados (~1-2 GB) e nem todo
+  # ambiente de dev precisa de voz.
+  stt:
+    # API compativel com OpenAI (/v1/audio/transcriptions), que e o que
+    # src/services/media/stt.ts fala.
+    image: fedirz/faster-whisper-server:latest-cpu
+    profiles: ["audio"]
+    environment:
+      WHISPER__MODEL: Systran/faster-whisper-small
+      WHISPER__INFERENCE_DEVICE: cpu
+    ports: ["9000:8000"]
+    volumes: ["seiva-whisper:/root/.cache/huggingface"]
+
+  tts:
+    # API compativel com OpenAI (/v1/audio/speech), que e o que
+    # src/services/media/tts.ts fala. Vozes pt-BR via Piper.
+    image: ghcr.io/matatonic/openedai-speech-min:latest
+    profiles: ["audio"]
+    ports: ["5002:8000"]
+    volumes: ["seiva-tts:/app/voices"]
+
 volumes:
   seiva-db:
+  seiva-whisper:
+  seiva-tts:

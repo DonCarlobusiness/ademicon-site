@@ -13,7 +13,15 @@ export interface Producer {
   locale: Locale;
   lgpdConsentAt: Date | null;
   onboardingStep: OnboardingStep;
+  /** Estado transitorio do onboarding, persistido entre mensagens. */
+  onboardingData: OnboardingData;
   createdAt: Date;
+}
+
+export interface OnboardingData {
+  pendingLat?: number;
+  pendingLon?: number;
+  pendingCrop?: Crop;
 }
 
 export type OnboardingStep = 'consent' | 'name' | 'location' | 'crop' | 'area' | 'done';

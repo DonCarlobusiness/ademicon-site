@@ -51,10 +51,17 @@ export async function deliverReply(
 export function buildUserContent(parts: {
   text: string | null;
   images: { base64: string; mediaType: 'image/jpeg' | 'image/png' | 'image/webp' }[];
+  documents?: { base64: string; filename: string }[];
   locationNote: string | null;
 }): Anthropic.MessageParam['content'] {
   const blocks: Anthropic.ContentBlockParam[] = [];
 
+  for (const doc of parts.documents ?? []) {
+    blocks.push({
+      type: 'document',
+      source: { type: 'base64', media_type: 'application/pdf', data: doc.base64 },
+    });
+  }
   for (const img of parts.images) {
     blocks.push({
       type: 'image',

@@ -4,6 +4,7 @@ import { getWeatherTool } from './getWeather.js';
 import { diagnosePhotoTool } from './diagnosePhoto.js';
 import { fertilizerCalcTool } from './fertilizerCalc.js';
 import { marketPriceTool } from './marketPrice.js';
+import { readSoilReportTool } from './readSoilReport.js';
 
 /**
  * Ordem FIXA. A lista de tools e renderizada antes do system prompt no
@@ -16,6 +17,7 @@ export const TOOLS: AgentTool[] = [
   diagnosePhotoTool,
   fertilizerCalcTool,
   marketPriceTool,
+  readSoilReportTool,
 ];
 
 export const TOOL_DEFINITIONS = TOOLS.map((tool) => tool.definition);

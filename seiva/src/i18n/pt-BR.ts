@@ -13,11 +13,16 @@ export const ptBR = {
   onboardingDone:
     'Pronto, {name}! Talhao de {area} ha de {crop} em {municipality} cadastrado.\n\nPode me mandar:\n- foto da folha para eu ver praga ou doenca\n- audio com sua duvida\n- "como esta meu talhao" para o mapa de satelite\n- "vai chover?" para o clima da sua area',
 
+  onboardingDoneNoCity:
+    'Pronto, {name}! Talhao de {area} ha de {crop} cadastrado.\n\nPode me mandar:\n- foto da folha para eu ver praga ou doenca\n- audio com sua duvida\n- "como esta meu talhao" para o mapa de satelite\n- "vai chover?" para o clima da sua area',
+
   // --- Erros / limites ---
   noFieldYet: 'Ainda nao tenho seu talhao cadastrado. Me manda a localizacao (pin) que eu cadastro na hora.',
   noClearPass:
     'Nao teve passagem de satelite sem nuvem nos ultimos {days} dias no seu talhao, entao nao tenho imagem confiavel agora. Assim que limpar eu te aviso.',
+  rateLimited: 'Voce mandou muita mensagem em pouco tempo e eu preciso dar uma respirada. Tenta de novo daqui a pouco.',
   genericError: 'Deu um problema aqui do meu lado. Tenta de novo em alguns minutos.',
+  documentTooBig: 'Esse arquivo e grande demais para eu abrir. Manda uma foto da pagina do laudo que eu leio igual.',
   unsupportedMedia: 'Nao consegui abrir esse arquivo. Manda como foto, audio ou texto que eu resolvo.',
   audioTranscriptionFailed: 'Nao entendi o audio. Pode repetir falando mais perto do telefone?',
 
