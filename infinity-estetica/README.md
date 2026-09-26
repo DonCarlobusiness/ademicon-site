@@ -32,3 +32,15 @@ NODE_PATH=$(npm root -g) node qa/screenshot.cjs         # screenshots → qa/scr
 - cabeçalho `X-Robots-Tag: noindex, nofollow, noarchive` (em `next.config.ts`)
 
 Os dados do negócio ficam restritos a `src/content/site.ts` e incluem apenas fatos públicos confirmados.
+
+## Preview na Vercel
+
+Projeto Vercel separado (não vincular ao da Ademicon):
+
+- **Root Directory:** `infinity-estetica`
+- **Framework Preset:** Next.js (detectado automaticamente)
+- **Install / Build / Output:** padrão (`npm install`, `next build`, `.next`)
+- **Node.js:** 20.x ou superior
+- **Env var:** `NEXT_PUBLIC_SITE_URL` = URL do deploy (sem barra final). Ela é lida no build, então alterar exige redeploy.
+
+As screenshots de QA (`qa/screenshots/`) não são versionadas, e `qa/` fica fora do deploy (`.vercelignore`).
