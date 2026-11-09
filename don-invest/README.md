@@ -12,7 +12,22 @@ Fluxo principal (página inicial `/`):
 
 > Ferramenta de pesquisa e educação. **Não é consultoria individualizada (Res. CVM 19/20) e não executa ordens.**
 
-## Executar localmente
+## Executar no Windows (mais simples)
+
+1. Instale o **Node.js LTS** em https://nodejs.org (próximo, próximo, concluir).
+2. Baixe o projeto do GitHub: na página do repositório, escolha a branch `claude/inspiring-babbage-2hhvwp`, clique em **Code → Download ZIP** e extraia (ou use `git clone`, abaixo).
+3. Abra a pasta `don-invest` e dê **dois cliques em `iniciar-windows.cmd`**. Na primeira vez ele instala as dependências; depois abre http://localhost:3000.
+
+Pelo PowerShell (um comando por linha — o PowerShell 5 do Windows não aceita `&&`):
+
+```powershell
+git clone -b claude/inspiring-babbage-2hhvwp https://github.com/doncarlobusiness/ademicon-site.git
+cd ademicon-site\don-invest
+npm install
+npm run dev
+```
+
+## Executar localmente (macOS/Linux)
 
 ```bash
 cd don-invest

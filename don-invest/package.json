@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:integration": "RUN_LIVE=1 vitest run tests/integration",
+    "test:integration": "vitest run tests/integration --mode live",
     "evidence": "tsx scripts/live-evidence.ts",
     "test:e2e": "node tests/e2e/smoke.mjs"
   },

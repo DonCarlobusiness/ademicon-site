@@ -1,6 +1,6 @@
 /**
  * Testes de integração REAIS (rede). Executar: npm run test:integration
- * São pulados quando RUN_LIVE não está definido (ex.: CI sem rede).
+ * São pulados fora do modo "live" (npm test comum, CI sem rede). Funciona em Windows, macOS e Linux.
  */
 import { describe, expect, it } from "vitest";
 import { fetchBcbSeries } from "@/lib/market-data/bcb";
@@ -8,7 +8,7 @@ import { fetchKrakenAsset } from "@/lib/market-data/kraken";
 import { fetchTesouro } from "@/lib/market-data/tesouro";
 import { runResearch } from "@/lib/analysis/research";
 
-const live = process.env.RUN_LIVE ? describe : describe.skip;
+const live = import.meta.env.MODE === "live" || process.env.RUN_LIVE ? describe : describe.skip;
 
 live("integração real", () => {
   it("BCB/SGS: meta Selic e IPCA 12m", async () => {
