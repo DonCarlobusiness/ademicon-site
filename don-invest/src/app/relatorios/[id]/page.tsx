@@ -51,7 +51,27 @@ function OpportunityDetail({ o, report }: { o: Opportunity; report: ResearchRepo
           <p><span className="text-slate-400">Custos:</span> {o.costs}</p>
           <p><span className="text-slate-400">Proteção:</span> {o.protection}</p>
           {o.incomeNote && <p className="rounded-lg border border-gold-600/40 bg-gold-500/5 p-2"><span className="text-gold-400">Sobre renda:</span> {o.incomeNote}</p>}
-          {o.officialUrl && <p><a className="text-electric-400 hover:underline" href={o.officialUrl} target="_blank" rel="noopener noreferrer nofollow">Site oficial ↗</a></p>}
+          {(o.whereToCheck ?? []).length > 0 && (
+            <div>
+              <span className="text-slate-400">Onde verificar ou contratar:</span>
+              <ul className="mt-1 space-y-0.5">{o.whereToCheck.map((w) => <li key={w.url}><a className="text-electric-400 hover:underline" href={w.url} target="_blank" rel="noopener noreferrer nofollow">{w.label} ↗</a></li>)}</ul>
+              <p className="text-[11px] text-slate-500">Links oficiais catalogados; não acessados pelo sistema nesta pesquisa.</p>
+            </div>
+          )}
+          {(o.projections ?? []).length > 0 && (
+            <div className="rounded-lg bg-navy-800 p-2 text-xs">
+              <p className="font-semibold text-electric-400">Projeções com seu capital e aportes</p>
+              <ul className="mt-1 space-y-1">
+                {o.projections.map((p) => (
+                  <li key={p.months}>
+                    <strong>{p.months} meses:</strong>{" "}
+                    {p.finalBalance !== null ? <>bruto {brl(p.finalBalance)} (investido {brl(p.totalInvested)}){p.netBalance !== null ? <>, líquido {brl(p.netBalance)}</> : ", impostos não calculados"}</> : p.range ? <>faixa {brl(p.range.pessimista, 0)} a {brl(p.range.otimista, 0)}</> : "não calculável"}
+                    <span className="block text-slate-500">{p.state} — {p.note}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           {([["Vantagens", o.pros, "text-emerald-400"], ["Desvantagens", o.cons, "text-amber-300"], ["Principais riscos", o.risks, "text-red-300"], ["O que invalidaria o cenário", o.invalidators, "text-slate-300"], ["Informações que faltam", o.missingInfo, "text-slate-400"]] as const).map(([t, list, c]) => (

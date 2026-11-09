@@ -28,6 +28,31 @@ export interface DimensionScore {
   justification: string;
 }
 
+/** Estado de evidência exibido na UI. */
+export type EvidenceState = "DADO_OBSERVADO" | "ESTIMATIVA_CENARIO" | "INFORMADO_USUARIO" | "INDISPONIVEL";
+
+export interface ProductProjection {
+  months: number;
+  state: EvidenceState;
+  totalInvested: number | null;
+  finalBalance: number | null;
+  grossGain: number | null;
+  taxStatus: "calculado" | "nao_calculado" | "isento" | null;
+  taxes: number | null;
+  netBalance: number | null;
+  realNetBalance: number | null;
+  range: { pessimista: number; otimista: number } | null;
+  note: string;
+}
+
+export interface WhereToCheck {
+  label: string;
+  url: string;
+  kind: "oficial" | "usuario";
+  /** true somente se o sistema acessou a URL nesta pesquisa. */
+  linkCheckedBySystem: boolean;
+}
+
 export type DataStatus = "verificado" | "parcial" | "indisponivel" | "manual";
 
 export type Category =
@@ -76,6 +101,9 @@ export interface Opportunity {
   observedAt: string | null;
   officialUrl: string;
   model: OpportunityModel;
+  projections: ProductProjection[];
+  whereToCheck: WhereToCheck[];
+  identifier: string;
   /** Avaliação por horizonte */
   byHorizon: Partial<Record<Horizon, HorizonAssessment>>;
 }
@@ -166,6 +194,7 @@ export interface ResearchReport {
   macroNotes: string[];
   opportunities: Opportunity[];
   horizons: HorizonSection[];
+  horizonMonths: number[];
   breakEven: { label: string; value: string; basis: string }[];
   platforms: Platform[];
   unavailableClasses: UnavailableClass[];

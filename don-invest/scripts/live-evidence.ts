@@ -6,18 +6,44 @@
  */
 import { runResearch } from "../src/lib/analysis/research";
 import { saveReport } from "../src/lib/store";
+import { mkdirSync, writeFileSync } from "node:fs";
 
 async function main() {
   const t0 = Date.now();
-  const r = await runResearch({
+  const request = {
     capital: "R$ 750,00",
-    horizons: ["curto", "longo"],
-    objective: "renda_passiva",
-    hasEmergencyReserve: "sim",
-    liquidityNeed: "nao_preve",
-    lossReaction: "nao_sei",
-    maxTolerableLossPct: 10,
-  });
+    monthlyContribution: 250,
+    horizonMonths: [3, 12, 60, 120],
+    objective: "renda_passiva" as const,
+    hasEmergencyReserve: "sim" as const,
+    liquidityNeed: "nao_preve" as const,
+  };
+  const r = await runResearch(request);
+  // Amostra sanitizada: sem credenciais, sem cabeçalhos, sem dados pessoais (não há nenhum no MVP)
+  mkdirSync("docs/evidence", { recursive: true });
+  const sample = {
+    nota: "Amostra gerada por `npm run evidence` contra as fontes reais. Sem credenciais: as fontes usadas são públicas.",
+    request_POST_api_research: request,
+    response: {
+      id: r.id,
+      status: r.status,
+      createdAt: r.createdAt,
+      providerRuns: r.providerRuns,
+      macro: r.macro,
+      horizonMonths: r.horizonMonths,
+      porPrazo: r.horizons.map((h) => ({
+        prazo: h.title,
+        ranqueadas: h.rankedIds.slice(0, 5).map((id) => {
+          const o = r.opportunities.find((x) => x.id === id)!;
+          return { nome: o.name, taxa: o.rateOrPrice.display, ref: o.observedAt, minimo: o.minimum.value, projecoes: o.projections };
+        }),
+        vetadas: h.vetoedIds,
+      })),
+      fontes: r.evidence.filter((e) => e.method !== "regra_catalogada").map((e) => ({ url: e.url, coleta: e.collectedAt, referencia: e.referenceAt, frescor: e.freshness })),
+      auditoria: r.audit.checks,
+    },
+  };
+  writeFileSync("docs/evidence/research-sample.json", JSON.stringify(sample, null, 2));
   await saveReport(r);
   console.log(`\n=== DON INVEST — evidência de pesquisa real (${((Date.now() - t0) / 1000).toFixed(1)} s) ===`);
   console.log(`Relatório: ${r.id}  status=${r.status}  criado=${r.createdAt}`);
@@ -33,6 +59,11 @@ async function main() {
   }
   console.log("\n-- Conclusões --");
   for (const h of r.horizons) console.log(`[${h.title}] ${h.conclusion}`);
+  console.log("\n-- Projeções com R$ 750 + R$ 250/mês --");
+  for (const o of r.opportunities) {
+    console.log(`${o.name.padEnd(48)} ${o.projections.map((p) => `${p.months}m=${p.finalBalance !== null ? p.finalBalance.toFixed(2) + (p.netBalance !== null ? "/liq " + p.netBalance.toFixed(2) : "") : p.range ? `faixa ${p.range.pessimista.toFixed(0)}-${p.range.otimista.toFixed(0)}` : "indisp."}`).join("  ")}`);
+  }
+  console.log("\nAmostra sanitizada salva em docs/evidence/research-sample.json");
   console.log("\n-- Auditoria --");
   for (const c of r.audit.checks) console.log(`${c.ok ? "OK  " : "FAIL"} ${c.name}: ${c.detail}`);
   console.log("\n-- Fontes (trilha de evidências) --");

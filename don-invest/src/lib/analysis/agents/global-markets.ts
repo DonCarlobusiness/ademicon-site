@@ -10,6 +10,8 @@ import { KRAKEN_PAIRS, type KrakenPairId } from "../../market-data/kraken";
 import { quotesStatus } from "../../market-data/quotes";
 import { RULES, ruleSource } from "../../catalog/rules";
 import { addSources } from "../context";
+import { firstInvestable } from "../input";
+import { WHERE } from "../../catalog/links";
 
 export function cryptoOpportunity(ctx: ResearchContext, pair: KrakenPairId): Opportunity | null {
   const d = ctx.kraken?.[pair];
@@ -23,7 +25,7 @@ export function cryptoOpportunity(ctx: ResearchContext, pair: KrakenPairId): Opp
   let minUsd: number | null = null;
   if (d.info?.orderMinBase) minUsd = Math.max(d.info.orderMinBase * t.ask, d.info.costMinQuote ?? 0);
   const minBrl = minUsd !== null && fx ? minUsd * fx : null;
-  const viable = minBrl === null ? null : minBrl <= ctx.input.capital;
+  const viable = minBrl === null ? null : minBrl <= firstInvestable(ctx.input);
   const fee = d.info?.takerFeePctBaseTier ?? null;
   const vol = d.history?.annualizedVol ?? null;
   const mdd = d.history?.maxDrawdown ?? null;
@@ -88,6 +90,9 @@ export function cryptoOpportunity(ctx: ResearchContext, pair: KrakenPairId): Opp
     officialUrl: "https://www.kraken.com/",
     model: vol !== null && mdd !== null ? { type: "volatil", annualVol: vol, maxDrawdown: mdd, historyDays: d.history!.days } : null,
     byHorizon: {},
+    projections: [],
+    whereToCheck: [...WHERE.kraken],
+    identifier: `Kraken ${meta.request} (chave ${meta.resultKey})`,
   };
 }
 
@@ -97,7 +102,7 @@ export function unavailableClasses(ctx: ResearchContext): UnavailableClass[] {
     {
       className: "Ações, ETFs e FIIs da B3",
       reason: q.error ?? "Provedor não configurado.",
-      howToIntegrate: "Contratar provedor licenciado (ex.: B3 Market Data/UP2DATA, brapi.dev, Twelve Data) e configurar QUOTES_PROVIDER/QUOTES_API_KEY. Ver docs/data-sources.md.",
+      howToIntegrate: "1) contratar um provedor licenciado (ex.: B3 Market Data/UP2DATA, brapi.dev, Twelve Data); 2) definir QUOTES_PROVIDER e QUOTES_API_KEY em .env.local no servidor; 3) implementar o adaptador em src/lib/market-data/quotes.ts e liberar o host em http.ts. Ver docs/data-sources.md.",
     },
     {
       className: "Ações, ETFs e REITs internacionais",
@@ -116,8 +121,8 @@ export function unavailableClasses(ctx: ResearchContext): UnavailableClass[] {
     },
     {
       className: "Renda fixa internacional e commodities",
-      reason: "Sem fonte licenciada configurada.",
-      howToIntegrate: "Provedor licenciado de treasuries/ETFs de commodities.",
+      reason: "Sem fonte licenciada configurada. Exposição a commodities seria via instrumento negociável (ETF/fundo), não compra física.",
+      howToIntegrate: "Provedor licenciado de treasuries e ETFs de commodities, com custos cambiais e elegibilidade por jurisdição.",
     },
   ];
   if (!ctx.kraken) {

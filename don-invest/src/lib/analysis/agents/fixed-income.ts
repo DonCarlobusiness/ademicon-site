@@ -14,6 +14,8 @@ import { RULES, ruleSource } from "../../catalog/rules";
 import { addSources } from "../context";
 import { irRegressivoRate } from "../../finance/tax";
 import { daysBetween } from "../../market-data/time";
+import { firstInvestable } from "../input";
+import { WHERE } from "../../catalog/links";
 
 const YEAR = 365;
 
@@ -58,7 +60,7 @@ export function bondToOpportunity(b: TesouroBond, ctx: ResearchContext): Opportu
   const tdSrc = ctx.tesouro!.source;
   const cat = CATEGORY[b.kind as keyof typeof CATEGORY];
   if (!cat) return null;
-  const capital = ctx.input.capital;
+  const capital = firstInvestable(ctx.input);
   const min = tesouroMinimumInvestment(b.buyPrice!);
   const viable = min <= capital;
   const daysToMat = daysBetween(ctx.now.toISOString(), b.maturity);
@@ -131,6 +133,9 @@ export function bondToOpportunity(b: TesouroBond, ctx: ResearchContext): Opportu
     missingInfo: missing,
     model,
     byHorizon: {},
+    projections: [],
+    whereToCheck: [...WHERE.tesouro],
+    identifier: `${b.type} — vencimento ${dateFmt(b.maturity)}`,
   };
 
   const mtm = "Antes do vencimento, o resgate é pelo preço de mercado do dia (marcação a mercado): se os juros subirem, o valor pode ficar abaixo do aplicado.";
@@ -242,19 +247,22 @@ export function poupancaOpportunity(ctx: ResearchContext): Opportunity | null {
     invalidators: ["Mudança na regra de remuneração", "Inflação acima do rendimento"],
     missingInfo: ["Condições específicas de cada instituição"],
     viableWithCapital: true,
-    viabilityNote: `Acessível com ${brl(ctx.input.capital)} (sem mínimo regulatório).`,
+    viabilityNote: `Acessível com ${brl(firstInvestable(ctx.input))} (sem mínimo regulatório).`,
     dataStatus: "verificado",
     sourceIds: [s.source.id, RULES.poupancaIsencao.id, RULES.fgc.id],
     observedAt: s.latest.date,
     officialUrl: "https://www.bcb.gov.br/estabilidadefinanceira/poupanca",
     model: { type: "renda_fixa", grossAnnualRate: annual, taxRegime: "isento_pf", custodyRate: 0, holdToMaturityDays: null, rateBasis: `Rendimento mensal de ${pctFmt(s.latest.value, 4)} mantido constante (hipótese)` },
     byHorizon: {},
+    projections: [],
+    whereToCheck: [...WHERE.poupanca, ...WHERE.bancos],
+    identifier: "Poupança (regra unificada, SGS 195)",
   };
 }
 
 export function manualOfferOpportunities(ctx: ResearchContext): Opportunity[] {
   return ctx.input.manualOffers.map((o, i) => {
-    const viable = o.minimum === null || o.minimum === undefined ? null : o.minimum <= ctx.input.capital;
+    const viable = o.minimum === null || o.minimum === undefined ? null : o.minimum <= firstInvestable(ctx.input);
     const id = `manual-${i + 1}`;
     const src = {
       id: `usuario-${i + 1}`,
@@ -300,6 +308,9 @@ export function manualOfferOpportunities(ctx: ResearchContext): Opportunity[] {
       officialUrl: o.url ?? "",
       model: gross !== null ? { type: "renda_fixa", grossAnnualRate: gross, taxRegime: o.taxExempt ? "isento_pf" : "renda_fixa_regressiva", custodyRate: 0, holdToMaturityDays: null, rateBasis: `${o.pctOfCdi}% do CDI hipotético (${pctFmt((ctx.hyp.cdi ?? 0) * 100)} a.a.)` } : null,
       byHorizon: {},
+      projections: [],
+      whereToCheck: [...(o.url ? [{ label: "Página informada por você", url: o.url, kind: "usuario" as const, linkCheckedBySystem: false }] : []), ...WHERE.bancos],
+      identifier: `${o.name} — ${o.institution}`,
     } satisfies Opportunity;
   });
 }

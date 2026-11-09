@@ -35,7 +35,7 @@ export function quotesStatus(): ProviderResult<null> {
       ? undefined
       : configured
         ? `Provedor "${configured}" configurado, mas ainda não implementado nesta versão.`
-        : "Nenhum provedor licenciado de cotações configurado (QUOTES_PROVIDER/QUOTES_API_KEY). Ações, FIIs, ETFs e REITs não foram pesquisados.",
+        : "Cobertura indisponível — configure QUOTES_PROVIDER/QUOTES_API_KEY no servidor. Ações, FIIs, ETFs e REITs não foram pesquisados e nenhuma cotação foi exibida.",
     durationMs: 0,
     fromCache: false,
   };

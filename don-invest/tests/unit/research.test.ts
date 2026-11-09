@@ -109,11 +109,58 @@ describe("pipeline de pesquisa (fixtures reais)", () => {
   });
 });
 
+describe("perfil, aportes e projeções por produto", () => {
+  it("não imputa perfil nem tolerância a perdas", async () => {
+    const r = await runResearch({ capital: 750, horizonMonths: [12] }, { connectors: fixtureConnectors(), now: FIXED_NOW });
+    expect(r.input.maxTolerableLossPct).toBeNull();
+    expect(r.input.riskProfile).toBe("sem_perfil");
+    expect(r.orchestrator.profile.label).toBe("Sem perfil definido");
+    expect(r.orchestrator.profile.rationale.join(" ")).toMatch(/Tolerância a perdas não informada/);
+    expect(r.orchestrator.profile.rationale.join(" ")).not.toMatch(/Tolera perder até 10%/);
+    const btc = r.opportunities.find((o) => o.id === "cripto-btc")!;
+    expect(btc.byHorizon.curto!.vetoes.join(" ")).toMatch(/Tolerância a perdas não informada/);
+  });
+
+  it("prazos em meses viram horizontes e geram projeções com aportes", async () => {
+    const r = await runResearch({ capital: 750, monthlyContribution: 250, horizonMonths: [3, 12, 60, 120] }, { connectors: fixtureConnectors(), now: FIXED_NOW });
+    expect(r.horizonMonths).toEqual([3, 12, 60, 120]);
+    expect(r.horizons.map((h) => h.horizon).sort()).toEqual(["curto", "longo", "medio"]);
+    const selic = r.opportunities.find((o) => o.category === "tesouro_selic")!;
+    const p12 = selic.projections.find((p) => p.months === 12)!;
+    expect(p12.state).toBe("ESTIMATIVA_CENARIO");
+    expect(p12.totalInvested).toBe(750 + 250 * 12);
+    expect(p12.taxStatus).toBe("calculado");
+    expect(p12.netBalance!).toBeLessThan(p12.finalBalance!);
+    expect(selic.whereToCheck.length).toBeGreaterThan(0);
+  });
+
+  it("título prefixado antes do vencimento não recebe projeção inventada", async () => {
+    const r = await runResearch({ capital: 750, horizonMonths: [3] }, { connectors: fixtureConnectors(), now: FIXED_NOW });
+    const pre = r.opportunities.find((o) => o.id === "td-pre-2032")!;
+    const p = pre.projections[0];
+    expect(p.state).toBe("INDISPONIVEL");
+    expect(p.finalBalance).toBeNull();
+    expect(p.note).toMatch(/preço de mercado/);
+  });
+
+  it("capital zero com aporte é aceito; viabilidade usa o primeiro aporte", async () => {
+    const r = await runResearch({ capital: 0, monthlyContribution: 100, horizonMonths: [12] }, { connectors: fixtureConnectors(), now: FIXED_NOW });
+    const selic = r.opportunities.find((o) => o.category === "tesouro_selic")!;
+    expect(selic.viableWithCapital).toBe(false); // mínimo ~R$ 202 > R$ 100
+    const pre = r.opportunities.find((o) => o.category === "tesouro_prefixado")!;
+    expect(pre.viableWithCapital).toBe(true);
+  });
+
+  it("rejeita capital e aporte zerados", () => {
+    expect(ResearchInputSchema.safeParse({ capital: 0, horizons: ["curto"] }).success).toBe(false);
+  });
+});
+
 describe("entrada e compliance", () => {
   it("valida entrada", () => {
     expect(ResearchInputSchema.safeParse({ capital: "abc", horizons: ["curto"] }).success).toBe(false);
     expect(ResearchInputSchema.safeParse({ capital: "R$ 750", horizons: [] }).success).toBe(false);
-    expect(ResearchInputSchema.safeParse({ capital: 0, horizons: ["curto"] }).success).toBe(false);
+    expect(ResearchInputSchema.safeParse({ capital: -5, horizons: ["curto"] }).success).toBe(false);
     expect(ResearchInputSchema.parse({ capital: "R$ 20.000", horizons: ["medio"] }).capital).toBe(20000);
   });
   it("modo regulado permanece bloqueado mesmo se solicitado", () => {

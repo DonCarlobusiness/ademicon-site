@@ -52,3 +52,22 @@ Dimensões: segurança do principal, liquidez, custo, adequação ao prazo, reto
 ## Renda passiva
 
 Renda passiva **não é** necessariamente renda mensal: cupons do Tesouro são semestrais; Renda+ paga mensalmente apenas no futuro; dividendos/proventos não têm frequência ou valor garantidos; variação de preço pode superar os rendimentos.
+
+## Simulador e projeções com aportes
+
+- Taxa mensal: i = (1+r)^(1/12) − 1. Patrimônio: FV = P·(1+i)^n + A·((1+i)^n − 1)/i, aporte no fim de cada mês; com i = 0, FV = P + A·n.
+- Total investido = P + A·n; lucro bruto = FV − total investido; poder de compra = FV / (1+inflação)^(n/12).
+- O núcleo não arredonda; centavos só na apresentação.
+- Impostos: “não calculados” por padrão. Com a regra de renda fixa, o IR regressivo é aplicado **por lote** (cada aporte tem seu prazo e alíquota) e o IOF vale para lotes com menos de 30 dias. Isento: líquido = bruto. O líquido só aparece quando os impostos são calculados.
+- Renda passiva: a simulação genérica não distribui renda. O “plano de retiradas” opcional mostra o saque mensal que preserva o poder de compra (rendimento real), rotulado como saque, não como pagamento do produto.
+- Cenários estressado/conservador/intermediário/otimista são taxas ilustrativas editáveis, não probabilidades.
+
+### Projeções por produto na pesquisa
+
+| Produto | Como é projetado |
+|---|---|
+| Tesouro Selic, poupança, ofertas em % do CDI | Capital + aportes à taxa atual mantida constante (hipótese), IR por lote, custódia quando aplicável |
+| Prefixado / IPCA+ antes do vencimento | **Não calculado** — resgate seria a preço de mercado |
+| Prefixado / IPCA+ no vencimento | Só o capital inicial à taxa da data-base; aportes não modelados (taxa futura desconhecida) |
+| IPCA+ com juros semestrais, Renda+ | Não modelado (fluxo de cupons/renda exige VNA e cronograma) |
+| Cripto | Faixa ilustrativa sobre o capital inicial (volatilidade histórica, retorno esperado zero) |

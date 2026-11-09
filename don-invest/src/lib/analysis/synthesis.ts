@@ -14,7 +14,7 @@ export const HORIZON_FOCUS: Record<Horizon, string> = {
   indefinido: "Conclusões condicionadas: sem prazo definido, a liquidez e a tolerância a perdas determinam o que é adequado.",
 };
 
-export function horizonConclusion(sec: Omit<HorizonSection, "conclusion">, opps: Map<string, Opportunity>): string {
+export function horizonConclusion(sec: Omit<HorizonSection, "conclusion">, opps: Map<string, Opportunity>, monthly = 0): string {
   if (sec.insufficientBasis) {
     return "Não há base suficiente para destacar uma opção neste horizonte com os dados obtidos. Isso é um resultado válido: veja as classes indisponíveis e como integrá-las.";
   }
@@ -24,7 +24,7 @@ export function horizonConclusion(sec: Omit<HorizonSection, "conclusion">, opps:
   const scen = lead?.byHorizon[sec.horizon]?.scenario;
   let s = `Maior aderência aos critérios e pesos informados: ${parts.join(", ")}.`;
   if (scen) {
-    s += ` No cenário ilustrativo de ${lead.name} (${scen.label}), ${brl(scen.amount)} chegariam a ${brl(scen.netFinal)} líquidos (${pctFmt(scen.realNetAnnualized * 100)} a.a. real) — hipótese, não promessa.`;
+    s += ` No cenário ilustrativo de ${lead.name} (${scen.label}), ${brl(scen.amount)} aplicados de uma vez chegariam a ${brl(scen.netFinal)} líquidos (${pctFmt(scen.realNetAnnualized * 100)} a.a. real) — hipótese, não promessa.${monthly > 0 ? " As projeções que incluem seus aportes mensais estão na tabela de cada opção." : ""}`;
   }
   if (sec.vetoedIds.length) s += ` ${sec.vetoedIds.length} opção(ões) vetada(s) pelo Risk Guardian neste horizonte (motivos na tabela).`;
   s += " Pontuação é de aderência ao perfil informado, não um ranking universal.";
@@ -42,7 +42,7 @@ export function executiveSummary(r: Pick<ResearchReport, "createdAt" | "input" |
   if (sel && ipca) summary.push(`Contexto oficial: Selic meta ${pctFmt(sel.value)} a.a. (ref. ${dateFmt(sel.referenceDate)}), IPCA 12 meses ${pctFmt(ipca.value)} (ref. ${dateFmt(ipca.referenceDate)}).`);
   const verified = r.opportunities.filter((o) => o.dataStatus !== "manual");
   const viable = verified.filter((o) => o.viableWithCapital === true);
-  summary.push(`Com ${brl(r.input.capital)}: ${viable.length} de ${verified.length} opções com dados obtidos têm mínimo de aplicação compatível com o capital.`);
+  summary.push(`Com ${brl(r.input.capital)}${r.input.monthlyContribution ? ` iniciais e ${brl(r.input.monthlyContribution)}/mês` : ""}: ${viable.length} de ${verified.length} opções com dados obtidos têm mínimo de aplicação compatível com o valor da primeira aplicação.`);
   for (const h of r.horizons) {
     if (h.insufficientBasis) summary.push(`${HORIZON_LABEL[h.horizon]}: não há base suficiente para destacar uma opção.`);
     else {

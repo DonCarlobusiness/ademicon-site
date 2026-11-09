@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { Planner } from "@/components/planner/Planner";
 
 export default function Home() {
-  redirect("/dashboard");
+  return <Planner />;
 }

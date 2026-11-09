@@ -11,25 +11,36 @@ const OBJ: Record<ResearchInput["objective"], string> = {
   crescimento: "crescimento patrimonial",
   preservacao: "preservação de capital",
   compra_planejada: "compra planejada",
+  imovel: "compra de imóvel",
+  aposentadoria: "aposentadoria",
+  liberdade_financeira: "liberdade financeira",
   misto: "objetivo misto",
 };
 
+const PROFILE_LABEL: Record<ResearchInput["riskProfile"], string> = {
+  sem_perfil: "Sem perfil definido",
+  conservador: "Conservador (declarado por você)",
+  moderado: "Moderado (declarado por você)",
+  arrojado: "Arrojado (declarado por você)",
+};
+
+/**
+ * Perfil: somente o que o usuário DECLAROU. Nada é inferido ou imputado.
+ * Não é suitability; orientação individualizada exige processo próprio (CVM).
+ */
 export function preliminaryProfile(i: ResearchInput): { label: string; preliminary: true; rationale: string[] } {
   const r: string[] = [];
-  let pts = 0;
-  if (i.lossReaction === "venderia_tudo") { pts -= 2; r.push("Venderia tudo em uma queda forte"); }
-  if (i.lossReaction === "esperaria") { pts += 1; r.push("Esperaria a recuperação em uma queda"); }
-  if (i.lossReaction === "aportaria_mais") { pts += 2; r.push("Aportaria mais em uma queda"); }
-  if (i.lossReaction === "nao_sei") r.push("Reação a quedas ainda desconhecida");
-  if (i.maxTolerableLossPct <= 5) { pts -= 2; r.push(`Tolera perder no máximo ${i.maxTolerableLossPct}%`); }
-  else if (i.maxTolerableLossPct <= 15) { r.push(`Tolera perder até ${i.maxTolerableLossPct}%`); }
-  else { pts += 1; r.push(`Tolera perder até ${i.maxTolerableLossPct}%`); }
-  if (i.experience === "nenhuma") { pts -= 1; r.push("Sem experiência prévia"); }
-  if (i.experience === "avancada") pts += 1;
-  if (i.hasEmergencyReserve !== "sim") { pts -= 1; r.push("Reserva de emergência não está completa"); }
-  if (i.hasExpensiveDebt) { pts -= 2; r.push("Possui dívidas caras"); }
-  const label = i.lossReaction === "nao_sei" && i.experience === "nenhuma" ? "Indefinido (dados insuficientes)" : pts <= -2 ? "Conservador" : pts <= 1 ? "Moderado" : "Arrojado";
-  return { label, preliminary: true, rationale: r };
+  if (i.lossReaction !== "nao_sei") {
+    r.push({ venderia_tudo: "Declarou que venderia tudo em uma queda forte", esperaria: "Declarou que esperaria a recuperação", aportaria_mais: "Declarou que aportaria mais em uma queda" }[i.lossReaction]);
+  }
+  if (i.maxTolerableLossPct !== null && i.maxTolerableLossPct !== undefined) r.push(`Declarou tolerar perda de até ${i.maxTolerableLossPct}%`);
+  else r.push("Tolerância a perdas não informada");
+  if (i.experience !== "nao_informado") r.push(`Experiência declarada: ${i.experience}`);
+  if (i.hasEmergencyReserve === "sim") r.push("Reserva de emergência separada");
+  else if (i.hasEmergencyReserve === "sem_resposta") r.push("Reserva de emergência: sem resposta");
+  else r.push("Reserva de emergência incompleta ou inexistente");
+  if (i.hasExpensiveDebt) r.push("Possui dívidas caras");
+  return { label: PROFILE_LABEL[i.riskProfile], preliminary: true, rationale: r };
 }
 
 export function runOrchestrator(i: ResearchInput) {

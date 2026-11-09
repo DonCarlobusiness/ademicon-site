@@ -1,0 +1,1088 @@
+{
+  "nota": "Amostra gerada por `npm run evidence` contra as fontes reais. Sem credenciais: as fontes usadas são públicas.",
+  "request_POST_api_research": {
+    "capital": "R$ 750,00",
+    "monthlyContribution": 250,
+    "horizonMonths": [
+      3,
+      12,
+      60,
+      120
+    ],
+    "objective": "renda_passiva",
+    "hasEmergencyReserve": "sim",
+    "liquidityNeed": "nao_preve"
+  },
+  "response": {
+    "id": "2a239e84-8f41-4afb-b48f-c108447721c8",
+    "status": "completo",
+    "createdAt": "2026-11-09T18:41:46.113Z",
+    "providerRuns": [
+      {
+        "provider": "bcb_sgs",
+        "label": "Banco Central (SGS)",
+        "status": "ok",
+        "durationMs": 1088,
+        "fromCache": false
+      },
+      {
+        "provider": "tesouro_transparente",
+        "label": "Tesouro Transparente (CSV oficial)",
+        "status": "ok",
+        "durationMs": 1143,
+        "fromCache": false
+      },
+      {
+        "provider": "kraken_public",
+        "label": "Kraken (dados públicos)",
+        "status": "ok",
+        "durationMs": 981,
+        "fromCache": false
+      },
+      {
+        "provider": "cvm_dados_abertos",
+        "label": "CVM Dados Abertos (disponibilidade)",
+        "status": "parcial",
+        "durationMs": 583,
+        "fromCache": false
+      },
+      {
+        "provider": "quotes_licensed",
+        "label": "Cotações licenciadas (ações/FIIs/ETFs)",
+        "status": "nao_configurado",
+        "durationMs": 0,
+        "fromCache": false,
+        "error": "Sem provedor licenciado configurado."
+      }
+    ],
+    "macro": [
+      {
+        "key": "selic_meta",
+        "label": "Meta Selic definida pelo Copom",
+        "value": 13.75,
+        "unit": "% a.a.",
+        "referenceDate": "2026-11-09T03:00:00.000Z",
+        "sourceId": "bcb-432"
+      },
+      {
+        "key": "selic_efetiva",
+        "label": "Taxa Selic anualizada base 252",
+        "value": 13.65,
+        "unit": "% a.a.",
+        "referenceDate": "2026-11-06T03:00:00.000Z",
+        "sourceId": "bcb-1178"
+      },
+      {
+        "key": "cdi",
+        "label": "CDI anualizado base 252",
+        "value": 13.65,
+        "unit": "% a.a.",
+        "referenceDate": "2026-11-06T03:00:00.000Z",
+        "sourceId": "bcb-4389"
+      },
+      {
+        "key": "ipca_12m",
+        "label": "IPCA — acumulado em 12 meses",
+        "value": 4.58,
+        "unit": "%",
+        "referenceDate": "2026-09-01T03:00:00.000Z",
+        "sourceId": "bcb-13522"
+      },
+      {
+        "key": "ipca_mensal",
+        "label": "IPCA — variação mensal",
+        "value": 0.82,
+        "unit": "% a.m.",
+        "referenceDate": "2026-09-01T03:00:00.000Z",
+        "sourceId": "bcb-433"
+      },
+      {
+        "key": "usdbrl",
+        "label": "Dólar comercial (venda) — taxa livre",
+        "value": 5.5146,
+        "unit": "R$/US$",
+        "referenceDate": "2026-11-09T03:00:00.000Z",
+        "sourceId": "bcb-1"
+      },
+      {
+        "key": "poupanca",
+        "label": "Poupança — rentabilidade do último período mensal",
+        "value": 0.6494,
+        "unit": "% no período mensal",
+        "referenceDate": "2026-11-06T03:00:00.000Z",
+        "sourceId": "bcb-195"
+      }
+    ],
+    "horizonMonths": [
+      3,
+      12,
+      60,
+      120
+    ],
+    "porPrazo": [
+      {
+        "prazo": "Curto prazo (até 12 meses)",
+        "ranqueadas": [
+          {
+            "nome": "Tesouro Selic 2027",
+            "taxa": "Selic + 0,0200% a.a. · PU compra R$ 20.251,05",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": 202.51,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 1500,
+                "finalBalance": 1532.4991412288741,
+                "grossGain": 32.49914122887412,
+                "taxStatus": "calculado",
+                "taxes": 7.312306776497196,
+                "netBalance": 1525.1868344523768,
+                "realNetBalance": 1508.2067785759693,
+                "range": null,
+                "note": "Hipótese: Selic hipotética 13,65% + ágio/deságio 0,0200% da data-base durante 3 meses. IR calculado por lote de aporte."
+              },
+              {
+                "months": 12,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 3750,
+                "finalBalance": 4036.196616069828,
+                "grossGain": 286.196616069828,
+                "taxStatus": "calculado",
+                "taxes": 55.69677559672976,
+                "netBalance": 3980.499840473098,
+                "realNetBalance": 3806.1769367690745,
+                "range": null,
+                "note": "Hipótese: Selic hipotética 13,65% + ágio/deságio 0,0200% da data-base durante 1 ano. IR calculado por lote de aporte."
+              },
+              {
+                "months": 60,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 15750,
+                "finalBalance": 22331.590752757314,
+                "grossGain": 6581.5907527573145,
+                "taxStatus": "calculado",
+                "taxes": 1012.9158383681074,
+                "netBalance": 21318.67491438921,
+                "realNetBalance": 17041.861037844443,
+                "range": null,
+                "note": "Hipótese: Selic hipotética 13,65% + ágio/deságio 0,0200% da data-base durante 5 anos. IR calculado por lote de aporte."
+              },
+              {
+                "months": 120,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 30750,
+                "finalBalance": 63292.05819760084,
+                "grossGain": 32542.05819760084,
+                "taxStatus": "calculado",
+                "taxes": 4906.985955094637,
+                "netBalance": 58385.072242506205,
+                "realNetBalance": 37309.157919890575,
+                "range": null,
+                "note": "Hipótese: Selic hipotética 13,65% + ágio/deságio 0,0200% da data-base durante 10 anos. IR calculado por lote de aporte."
+              }
+            ]
+          },
+          {
+            "nome": "Caderneta de poupança",
+            "taxa": "0,6494% no período mensal iniciado em 06/11/2026 (≈ 8,08% a.a.)",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": null,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 1500,
+                "finalBalance": 1519.5876354889024,
+                "grossGain": 19.58763548890238,
+                "taxStatus": "isento",
+                "taxes": 0,
+                "netBalance": 1519.5876354889024,
+                "realNetBalance": 1502.6699160483436,
+                "range": null,
+                "note": "Hipótese: Rendimento mensal de 0,6494% mantido constante (hipótese) durante 3 meses. Isento de IR para pessoa física (regra informada para este produto)."
+              },
+              {
+                "months": 12,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 3750,
+                "finalBalance": 3920.084078334585,
+                "grossGain": 170.08407833458477,
+                "taxStatus": "isento",
+                "taxes": 0,
+                "netBalance": 3920.084078334585,
+                "realNetBalance": 3748.407036082028,
+                "range": null,
+                "note": "Hipótese: Rendimento mensal de 0,6494% mantido constante (hipótese) durante 1 ano. Isento de IR para pessoa física (regra informada para este produto)."
+              },
+              {
+                "months": 60,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 15750,
+                "finalBalance": 19376.28658539881,
+                "grossGain": 3626.2865853988114,
+                "taxStatus": "isento",
+                "taxes": 0,
+                "netBalance": 19376.28658539881,
+                "realNetBalance": 15489.142019560484,
+                "range": null,
+                "note": "Hipótese: Rendimento mensal de 0,6494% mantido constante (hipótese) durante 5 anos. Isento de IR para pessoa física (regra informada para este produto)."
+              },
+              {
+                "months": 120,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 30750,
+                "finalBalance": 46842.43088849106,
+                "grossGain": 16092.430888491057,
+                "taxStatus": "isento",
+                "taxes": 0,
+                "netBalance": 46842.43088849106,
+                "realNetBalance": 29933.19326747234,
+                "range": null,
+                "note": "Hipótese: Rendimento mensal de 0,6494% mantido constante (hipótese) durante 10 anos. Isento de IR para pessoa física (regra informada para este produto)."
+              }
+            ]
+          },
+          {
+            "nome": "Tesouro Prefixado 2027",
+            "taxa": "13,59% a.a. (prefixado) · PU compra R$ 981,46",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": 39.26,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 765.8429230813196,
+                "grossGain": 15.842923081319555,
+                "taxStatus": "calculado",
+                "taxes": 3.5646576932969,
+                "netBalance": 762.2782653880226,
+                "realNetBalance": 756.61003563859,
+                "range": null,
+                "note": "Valor no vencimento (2 meses) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 13,59% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              },
+              {
+                "months": 12,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 765.8429230813196,
+                "grossGain": 15.842923081319555,
+                "taxStatus": "calculado",
+                "taxes": 3.5646576932969,
+                "netBalance": 762.2782653880226,
+                "realNetBalance": 756.61003563859,
+                "range": null,
+                "note": "Valor no vencimento (2 meses) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 13,59% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              },
+              {
+                "months": 60,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 765.8429230813196,
+                "grossGain": 15.842923081319555,
+                "taxStatus": "calculado",
+                "taxes": 3.5646576932969,
+                "netBalance": 762.2782653880226,
+                "realNetBalance": 756.61003563859,
+                "range": null,
+                "note": "Valor no vencimento (2 meses) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 13,59% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              },
+              {
+                "months": 120,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 765.8429230813196,
+                "grossGain": 15.842923081319555,
+                "taxStatus": "calculado",
+                "taxes": 3.5646576932969,
+                "netBalance": 762.2782653880226,
+                "realNetBalance": 756.61003563859,
+                "range": null,
+                "note": "Valor no vencimento (2 meses) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 13,59% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              }
+            ]
+          }
+        ],
+        "vetadas": [
+          "td-pre-2029",
+          "td-pre-2032",
+          "td-ipca-2029",
+          "td-ipca-2035",
+          "td-ipcaj-2037",
+          "td-renda-2049",
+          "cripto-btc",
+          "cripto-eth"
+        ]
+      },
+      {
+        "prazo": "Médio prazo (1–5 anos)",
+        "ranqueadas": [
+          {
+            "nome": "Tesouro Selic 2027",
+            "taxa": "Selic + 0,0200% a.a. · PU compra R$ 20.251,05",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": 202.51,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 1500,
+                "finalBalance": 1532.4991412288741,
+                "grossGain": 32.49914122887412,
+                "taxStatus": "calculado",
+                "taxes": 7.312306776497196,
+                "netBalance": 1525.1868344523768,
+                "realNetBalance": 1508.2067785759693,
+                "range": null,
+                "note": "Hipótese: Selic hipotética 13,65% + ágio/deságio 0,0200% da data-base durante 3 meses. IR calculado por lote de aporte."
+              },
+              {
+                "months": 12,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 3750,
+                "finalBalance": 4036.196616069828,
+                "grossGain": 286.196616069828,
+                "taxStatus": "calculado",
+                "taxes": 55.69677559672976,
+                "netBalance": 3980.499840473098,
+                "realNetBalance": 3806.1769367690745,
+                "range": null,
+                "note": "Hipótese: Selic hipotética 13,65% + ágio/deságio 0,0200% da data-base durante 1 ano. IR calculado por lote de aporte."
+              },
+              {
+                "months": 60,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 15750,
+                "finalBalance": 22331.590752757314,
+                "grossGain": 6581.5907527573145,
+                "taxStatus": "calculado",
+                "taxes": 1012.9158383681074,
+                "netBalance": 21318.67491438921,
+                "realNetBalance": 17041.861037844443,
+                "range": null,
+                "note": "Hipótese: Selic hipotética 13,65% + ágio/deságio 0,0200% da data-base durante 5 anos. IR calculado por lote de aporte."
+              },
+              {
+                "months": 120,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 30750,
+                "finalBalance": 63292.05819760084,
+                "grossGain": 32542.05819760084,
+                "taxStatus": "calculado",
+                "taxes": 4906.985955094637,
+                "netBalance": 58385.072242506205,
+                "realNetBalance": 37309.157919890575,
+                "range": null,
+                "note": "Hipótese: Selic hipotética 13,65% + ágio/deságio 0,0200% da data-base durante 10 anos. IR calculado por lote de aporte."
+              }
+            ]
+          },
+          {
+            "nome": "Tesouro Prefixado 2029",
+            "taxa": "14,78% a.a. (prefixado) · PU compra R$ 745,87",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": 37.29,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 2,2 anos: resgatar em 3 meses seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 12,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 2,2 anos: resgatar em 1 ano seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 60,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 1006.671052598096,
+                "grossGain": 256.671052598096,
+                "taxStatus": "calculado",
+                "taxes": 38.500657889714404,
+                "netBalance": 968.1703947083817,
+                "realNetBalance": 878.6442753768547,
+                "range": null,
+                "note": "Valor no vencimento (2,2 anos) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 14,78% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              },
+              {
+                "months": 120,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 1006.671052598096,
+                "grossGain": 256.671052598096,
+                "taxStatus": "calculado",
+                "taxes": 38.500657889714404,
+                "netBalance": 968.1703947083817,
+                "realNetBalance": 878.6442753768547,
+                "range": null,
+                "note": "Valor no vencimento (2,2 anos) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 14,78% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              }
+            ]
+          },
+          {
+            "nome": "Tesouro IPCA+ 2029",
+            "taxa": "IPCA + 7,68% a.a. · PU compra R$ 3.971,58",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": 39.72,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 2,5 anos: resgatar em 3 meses seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 12,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 2,5 anos: resgatar em 1 ano seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 60,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 1004.2615321851347,
+                "grossGain": 254.26153218513468,
+                "taxStatus": "calculado",
+                "taxes": 38.1392298277702,
+                "netBalance": 966.1223023573644,
+                "realNetBalance": 863.7946580504808,
+                "range": null,
+                "note": "Valor no vencimento (2,5 anos) apenas do capital inicial, à taxa da data-base (IPCA hipotético 4,58% a.a. + 7,68% a.a., mantido até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              },
+              {
+                "months": 120,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 1004.2615321851347,
+                "grossGain": 254.26153218513468,
+                "taxStatus": "calculado",
+                "taxes": 38.1392298277702,
+                "netBalance": 966.1223023573644,
+                "realNetBalance": 863.7946580504808,
+                "range": null,
+                "note": "Valor no vencimento (2,5 anos) apenas do capital inicial, à taxa da data-base (IPCA hipotético 4,58% a.a. + 7,68% a.a., mantido até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              }
+            ]
+          },
+          {
+            "nome": "Tesouro Prefixado 2027",
+            "taxa": "13,59% a.a. (prefixado) · PU compra R$ 981,46",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": 39.26,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 765.8429230813196,
+                "grossGain": 15.842923081319555,
+                "taxStatus": "calculado",
+                "taxes": 3.5646576932969,
+                "netBalance": 762.2782653880226,
+                "realNetBalance": 756.61003563859,
+                "range": null,
+                "note": "Valor no vencimento (2 meses) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 13,59% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              },
+              {
+                "months": 12,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 765.8429230813196,
+                "grossGain": 15.842923081319555,
+                "taxStatus": "calculado",
+                "taxes": 3.5646576932969,
+                "netBalance": 762.2782653880226,
+                "realNetBalance": 756.61003563859,
+                "range": null,
+                "note": "Valor no vencimento (2 meses) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 13,59% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              },
+              {
+                "months": 60,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 765.8429230813196,
+                "grossGain": 15.842923081319555,
+                "taxStatus": "calculado",
+                "taxes": 3.5646576932969,
+                "netBalance": 762.2782653880226,
+                "realNetBalance": 756.61003563859,
+                "range": null,
+                "note": "Valor no vencimento (2 meses) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 13,59% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              },
+              {
+                "months": 120,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 765.8429230813196,
+                "grossGain": 15.842923081319555,
+                "taxStatus": "calculado",
+                "taxes": 3.5646576932969,
+                "netBalance": 762.2782653880226,
+                "realNetBalance": 756.61003563859,
+                "range": null,
+                "note": "Valor no vencimento (2 meses) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 13,59% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              }
+            ]
+          },
+          {
+            "nome": "Caderneta de poupança",
+            "taxa": "0,6494% no período mensal iniciado em 06/11/2026 (≈ 8,08% a.a.)",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": null,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 1500,
+                "finalBalance": 1519.5876354889024,
+                "grossGain": 19.58763548890238,
+                "taxStatus": "isento",
+                "taxes": 0,
+                "netBalance": 1519.5876354889024,
+                "realNetBalance": 1502.6699160483436,
+                "range": null,
+                "note": "Hipótese: Rendimento mensal de 0,6494% mantido constante (hipótese) durante 3 meses. Isento de IR para pessoa física (regra informada para este produto)."
+              },
+              {
+                "months": 12,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 3750,
+                "finalBalance": 3920.084078334585,
+                "grossGain": 170.08407833458477,
+                "taxStatus": "isento",
+                "taxes": 0,
+                "netBalance": 3920.084078334585,
+                "realNetBalance": 3748.407036082028,
+                "range": null,
+                "note": "Hipótese: Rendimento mensal de 0,6494% mantido constante (hipótese) durante 1 ano. Isento de IR para pessoa física (regra informada para este produto)."
+              },
+              {
+                "months": 60,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 15750,
+                "finalBalance": 19376.28658539881,
+                "grossGain": 3626.2865853988114,
+                "taxStatus": "isento",
+                "taxes": 0,
+                "netBalance": 19376.28658539881,
+                "realNetBalance": 15489.142019560484,
+                "range": null,
+                "note": "Hipótese: Rendimento mensal de 0,6494% mantido constante (hipótese) durante 5 anos. Isento de IR para pessoa física (regra informada para este produto)."
+              },
+              {
+                "months": 120,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 30750,
+                "finalBalance": 46842.43088849106,
+                "grossGain": 16092.430888491057,
+                "taxStatus": "isento",
+                "taxes": 0,
+                "netBalance": 46842.43088849106,
+                "realNetBalance": 29933.19326747234,
+                "range": null,
+                "note": "Hipótese: Rendimento mensal de 0,6494% mantido constante (hipótese) durante 10 anos. Isento de IR para pessoa física (regra informada para este produto)."
+              }
+            ]
+          }
+        ],
+        "vetadas": [
+          "td-renda-2049",
+          "cripto-btc",
+          "cripto-eth"
+        ]
+      },
+      {
+        "prazo": "Longo prazo (mais de 5 anos)",
+        "ranqueadas": [
+          {
+            "nome": "Tesouro Prefixado 2032",
+            "taxa": "15,17% a.a. (prefixado) · PU compra R$ 485,56",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": 33.99,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 5,2 anos: resgatar em 3 meses seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 12,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 5,2 anos: resgatar em 1 ano seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 60,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 5,2 anos: resgatar em 5 anos seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 120,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 1539.8879553238867,
+                "grossGain": 789.8879553238867,
+                "taxStatus": "calculado",
+                "taxes": 118.48319329858299,
+                "netBalance": 1421.4047620253036,
+                "realNetBalance": 1127.8027235597065,
+                "range": null,
+                "note": "Valor no vencimento (5,2 anos) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 15,17% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              }
+            ]
+          },
+          {
+            "nome": "Tesouro IPCA+ 2035",
+            "taxa": "IPCA + 7,87% a.a. · PU compra R$ 2.515,93",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": 50.32,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 8,5 anos: resgatar em 3 meses seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 12,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 8,5 anos: resgatar em 1 ano seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 60,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 8,5 anos: resgatar em 5 anos seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 120,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 2054.1873586002025,
+                "grossGain": 1304.1873586002025,
+                "taxStatus": "calculado",
+                "taxes": 195.62810379003037,
+                "netBalance": 1858.5592548101722,
+                "realNetBalance": 1270.1733406059247,
+                "range": null,
+                "note": "Valor no vencimento (8,5 anos) apenas do capital inicial, à taxa da data-base (IPCA hipotético 4,58% a.a. + 7,87% a.a., mantido até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              }
+            ]
+          },
+          {
+            "nome": "Tesouro IPCA+ com Juros Semestrais 2037",
+            "taxa": "IPCA + 7,75% a.a. · PU compra R$ 4.349,48",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": 43.49,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 10,5 anos: resgatar em 3 meses seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 12,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 10,5 anos: resgatar em 1 ano seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 60,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 10,5 anos: resgatar em 5 anos seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 120,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 10,5 anos: resgatar em 10 anos seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              }
+            ]
+          },
+          {
+            "nome": "Tesouro Selic 2027",
+            "taxa": "Selic + 0,0200% a.a. · PU compra R$ 20.251,05",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": 202.51,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 1500,
+                "finalBalance": 1532.4991412288741,
+                "grossGain": 32.49914122887412,
+                "taxStatus": "calculado",
+                "taxes": 7.312306776497196,
+                "netBalance": 1525.1868344523768,
+                "realNetBalance": 1508.2067785759693,
+                "range": null,
+                "note": "Hipótese: Selic hipotética 13,65% + ágio/deságio 0,0200% da data-base durante 3 meses. IR calculado por lote de aporte."
+              },
+              {
+                "months": 12,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 3750,
+                "finalBalance": 4036.196616069828,
+                "grossGain": 286.196616069828,
+                "taxStatus": "calculado",
+                "taxes": 55.69677559672976,
+                "netBalance": 3980.499840473098,
+                "realNetBalance": 3806.1769367690745,
+                "range": null,
+                "note": "Hipótese: Selic hipotética 13,65% + ágio/deságio 0,0200% da data-base durante 1 ano. IR calculado por lote de aporte."
+              },
+              {
+                "months": 60,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 15750,
+                "finalBalance": 22331.590752757314,
+                "grossGain": 6581.5907527573145,
+                "taxStatus": "calculado",
+                "taxes": 1012.9158383681074,
+                "netBalance": 21318.67491438921,
+                "realNetBalance": 17041.861037844443,
+                "range": null,
+                "note": "Hipótese: Selic hipotética 13,65% + ágio/deságio 0,0200% da data-base durante 5 anos. IR calculado por lote de aporte."
+              },
+              {
+                "months": 120,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 30750,
+                "finalBalance": 63292.05819760084,
+                "grossGain": 32542.05819760084,
+                "taxStatus": "calculado",
+                "taxes": 4906.985955094637,
+                "netBalance": 58385.072242506205,
+                "realNetBalance": 37309.157919890575,
+                "range": null,
+                "note": "Hipótese: Selic hipotética 13,65% + ágio/deságio 0,0200% da data-base durante 10 anos. IR calculado por lote de aporte."
+              }
+            ]
+          },
+          {
+            "nome": "Tesouro Prefixado 2029",
+            "taxa": "14,78% a.a. (prefixado) · PU compra R$ 745,87",
+            "ref": "2026-11-06T03:00:00.000Z",
+            "minimo": 37.29,
+            "projecoes": [
+              {
+                "months": 3,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 2,2 anos: resgatar em 3 meses seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 12,
+                "state": "INDISPONIVEL",
+                "totalInvested": null,
+                "finalBalance": null,
+                "grossGain": null,
+                "taxStatus": null,
+                "taxes": null,
+                "netBalance": null,
+                "realNetBalance": null,
+                "range": null,
+                "note": "Vence em 2,2 anos: resgatar em 1 ano seria a preço de mercado, que não é previsível. A taxa contratada só vale até o vencimento."
+              },
+              {
+                "months": 60,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 1006.671052598096,
+                "grossGain": 256.671052598096,
+                "taxStatus": "calculado",
+                "taxes": 38.500657889714404,
+                "netBalance": 968.1703947083817,
+                "realNetBalance": 878.6442753768547,
+                "range": null,
+                "note": "Valor no vencimento (2,2 anos) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 14,78% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              },
+              {
+                "months": 120,
+                "state": "ESTIMATIVA_CENARIO",
+                "totalInvested": 750,
+                "finalBalance": 1006.671052598096,
+                "grossGain": 256.671052598096,
+                "taxStatus": "calculado",
+                "taxes": 38.500657889714404,
+                "netBalance": 968.1703947083817,
+                "realNetBalance": 878.6442753768547,
+                "range": null,
+                "note": "Valor no vencimento (2,2 anos) apenas do capital inicial, à taxa da data-base (Taxa prefixada de 14,78% a.a. da data-base, mantida até o vencimento). Aportes mensais NÃO incluídos: entrariam a taxas futuras desconhecidas. Após o vencimento, o reinvestimento não é modelado."
+              }
+            ]
+          }
+        ],
+        "vetadas": [
+          "cripto-btc",
+          "cripto-eth"
+        ]
+      }
+    ],
+    "fontes": [
+      {
+        "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados?formato=json&dataInicial=10%2F10%2F2026&dataFinal=09%2F11%2F2026",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-09T03:00:00.000Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.1178/dados?formato=json&dataInicial=10%2F10%2F2026&dataFinal=09%2F11%2F2026",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-06T03:00:00.000Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.4389/dados?formato=json&dataInicial=10%2F10%2F2026&dataFinal=09%2F11%2F2026",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-06T03:00:00.000Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.433/dados?formato=json&dataInicial=05%2F10%2F2025&dataFinal=09%2F11%2F2026",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-09-01T03:00:00.000Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.13522/dados?formato=json&dataInicial=05%2F10%2F2025&dataFinal=09%2F11%2F2026",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-09-01T03:00:00.000Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.1/dados?formato=json&dataInicial=10%2F10%2F2026&dataFinal=09%2F11%2F2026",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-09T03:00:00.000Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://api.bcb.gov.br/dados/serie/bcdata.sgs.195/dados?formato=json&dataInicial=10%2F10%2F2026&dataFinal=09%2F11%2F2026",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-06T03:00:00.000Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://api.kraken.com/0/public/Ticker?pair=XBTUSD",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-09T18:41:46.113Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://api.kraken.com/0/public/AssetPairs?pair=XBTUSD",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-09T18:41:46.113Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=1440",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-09T00:00:00.000Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://api.kraken.com/0/public/Ticker?pair=ETHUSD",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-09T18:41:46.113Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://api.kraken.com/0/public/AssetPairs?pair=ETHUSD",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-09T18:41:46.113Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://api.kraken.com/0/public/OHLC?pair=ETHUSD&interval=1440",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-09T00:00:00.000Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://www.tesourotransparente.gov.br/ckan/dataset/df56aa42-484a-4a59-8184-7676580c81e3/resource/796d2059-14e9-44e3-80c9-2d9e30b405c1/download/PrecoTaxaTesouroDireto.csv",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-06T03:00:00.000Z",
+        "frescor": "atual"
+      },
+      {
+        "url": "https://dados.cvm.gov.br/dados/FI/CAD/DADOS/",
+        "coleta": "2026-11-09T18:41:46.113Z",
+        "referencia": "2026-11-09T18:41:46.113Z",
+        "frescor": "atual"
+      }
+    ],
+    "auditoria": [
+      {
+        "name": "Selic meta × Selic efetiva (BCB)",
+        "ok": true,
+        "detail": "Diferença de 0.10 p.p. (esperado ≤ 0,5 p.p.)."
+      },
+      {
+        "name": "CDI × Selic efetiva (BCB)",
+        "ok": true,
+        "detail": "Diferença de 0.00 p.p. (esperado ≤ 0,5 p.p.)."
+      },
+      {
+        "name": "Faixa de sanidade do dólar (BCB)",
+        "ok": true,
+        "detail": "R$ 5.5146 por US$."
+      },
+      {
+        "name": "Datas futuras descartadas na série 432",
+        "ok": true,
+        "detail": "Nenhum ponto futuro."
+      },
+      {
+        "name": "Ágio/deságio do Tesouro Selic plausível",
+        "ok": true,
+        "detail": "4 título(s) Selic; fora de ±1 p.p.: 0."
+      },
+      {
+        "name": "Prefixado mais curto (Tesouro) × Selic meta (BCB)",
+        "ok": true,
+        "detail": "13,59% vs 13,75% — diferença 0.16 p.p. (cruzamento entre fontes; esperado ≤ 6 p.p.)."
+      },
+      {
+        "name": "Data-base do Tesouro recente",
+        "ok": true,
+        "detail": "Data-base há 3.7 dias."
+      },
+      {
+        "name": "Consistência do ticker Kraken BTCUSD",
+        "ok": true,
+        "detail": "bid ≤ ask, último dentro da faixa de 24h, spread 0,000%."
+      },
+      {
+        "name": "Consistência do ticker Kraken ETHUSD",
+        "ok": true,
+        "detail": "bid ≤ ask, último dentro da faixa de 24h, spread 0,000%."
+      },
+      {
+        "name": "Consistência aritmética dos cenários",
+        "ok": true,
+        "detail": "Valor final = aplicado + rendimento líquido; impostos ≤ rendimento."
+      },
+      {
+        "name": "Números gerados por IA",
+        "ok": true,
+        "detail": "Nenhum número do relatório vem de texto gerado por IA; todos os cálculos são funções determinísticas testadas."
+      }
+    ]
+  }
+}

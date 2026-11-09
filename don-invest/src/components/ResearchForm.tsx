@@ -37,14 +37,15 @@ export function ResearchForm() {
   const router = useRouter();
   const [capital, setCapital] = useState("");
   const [monthly, setMonthly] = useState("");
-  const [reserve, setReserve] = useState<"sim" | "nao" | "parcial">("nao");
+  const [reserve, setReserve] = useState<"sim" | "nao" | "parcial" | "sem_resposta">("sem_resposta");
   const [objective, setObjective] = useState("renda_passiva");
   const [horizons, setHorizons] = useState<Horizon[]>(["curto", "longo"]);
   const [liquidity, setLiquidity] = useState("nao_preve");
-  const [experience, setExperience] = useState("basica");
+  const [experience, setExperience] = useState("nao_informado");
+  const [riskProfile, setRiskProfile] = useState("sem_perfil");
   const [debt, setDebt] = useState(false);
   const [lossReaction, setLossReaction] = useState("nao_sei");
-  const [maxLoss, setMaxLoss] = useState(10);
+  const [maxLoss, setMaxLoss] = useState<number | null>(null);
   const [region, setRegion] = useState("ambos");
   const [taxResidence, setTaxResidence] = useState("brasil");
   const [institutions, setInstitutions] = useState("");
@@ -63,7 +64,7 @@ export function ResearchForm() {
     setHorizons(["curto", "longo"]);
     setLiquidity("nao_preve");
     setLossReaction("nao_sei");
-    setMaxLoss(10);
+    setMaxLoss(null);
   }
 
   function toggleH(h: Horizon) {
@@ -90,6 +91,7 @@ export function ResearchForm() {
       hasExpensiveDebt: debt,
       lossReaction,
       maxTolerableLossPct: maxLoss,
+      riskProfile,
       regionPreference: region,
       taxResidence,
       institutions: institutions.split(",").map((s) => s.trim()).filter(Boolean),
@@ -158,6 +160,9 @@ export function ResearchForm() {
             <select id="objective" value={objective} onChange={(e) => setObjective(e.target.value)} className={field}>
               <option value="renda_passiva">Renda passiva</option>
               <option value="crescimento">Crescimento patrimonial</option>
+              <option value="imovel">Comprar imóvel</option>
+              <option value="aposentadoria">Aposentadoria</option>
+              <option value="liberdade_financeira">Liberdade financeira</option>
               <option value="preservacao">Preservação de capital</option>
               <option value="compra_planejada">Compra planejada</option>
               <option value="misto">Misto</option>
@@ -166,6 +171,7 @@ export function ResearchForm() {
           <div>
             <label htmlFor="reserve" className={label}>Já tem reserva de emergência separada?</label>
             <select id="reserve" value={reserve} onChange={(e) => setReserve(e.target.value as typeof reserve)} className={field}>
+              <option value="sem_resposta">Sem resposta</option>
               <option value="sim">Sim, separada</option>
               <option value="parcial">Parcial</option>
               <option value="nao">Não</option>
@@ -176,6 +182,7 @@ export function ResearchForm() {
             <select id="liquidity" value={liquidity} onChange={(e) => setLiquidity(e.target.value)} className={field}>
               <option value="nao_preve">Não prevejo</option>
               <option value="em_ate_12m">Talvez em até 12 meses</option>
+              <option value="ate_30d">Em até 30 dias</option>
               <option value="imediata">A qualquer momento</option>
             </select>
           </div>
@@ -196,16 +203,29 @@ export function ResearchForm() {
             </select>
           </div>
           <div>
-            <label htmlFor="maxLoss" className={label}>Perda máxima tolerável: {maxLoss}%</label>
-            <input id="maxLoss" type="range" min={0} max={80} step={5} value={maxLoss} onChange={(e) => setMaxLoss(Number(e.target.value))} className="w-full accent-[#d4af37]" />
+            <label htmlFor="maxLoss" className={label}>Perda máxima que aceitaria</label>
+            <select id="maxLoss" value={maxLoss === null ? "" : String(maxLoss)} onChange={(e) => setMaxLoss(e.target.value === "" ? null : Number(e.target.value))} className={field}>
+              <option value="">Não informado</option>
+              {[0, 5, 10, 20, 30, 50, 70].map((v) => <option key={v} value={v}>{v}%</option>)}
+            </select>
           </div>
           <div>
             <label htmlFor="experience" className={label}>Experiência com investimentos</label>
             <select id="experience" value={experience} onChange={(e) => setExperience(e.target.value)} className={field}>
+              <option value="nao_informado">Não informado</option>
               <option value="nenhuma">Nenhuma</option>
               <option value="basica">Básica</option>
               <option value="intermediaria">Intermediária</option>
               <option value="avancada">Avançada</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="riskProfile" className={label}>Perfil de risco (declarado)</label>
+            <select id="riskProfile" value={riskProfile} onChange={(e) => setRiskProfile(e.target.value)} className={field}>
+              <option value="sem_perfil">Sem perfil definido</option>
+              <option value="conservador">Conservador</option>
+              <option value="moderado">Moderado</option>
+              <option value="arrojado">Arrojado</option>
             </select>
           </div>
           <div>

@@ -2,7 +2,7 @@
  * Pipeline de pesquisa: conectores → normalização → agentes → auditoria → relatório.
  */
 import { randomUUID } from "node:crypto";
-import { ResearchInputSchema, type Horizon, type ResearchInput, type ResearchInputRaw, HORIZON_DAYS, HORIZON_LABEL } from "./input";
+import { ResearchInputSchema, firstInvestable, DEFAULT_HORIZON_MONTHS, type Horizon, type ResearchInput, type ResearchInputRaw, HORIZON_DAYS, HORIZON_LABEL } from "./input";
 import type { HorizonSection, Opportunity, ProviderRun, ResearchReport } from "./types";
 import type { ResearchContext } from "./context";
 import { addSources } from "./context";
@@ -22,6 +22,7 @@ import { resolveWeights, scoreOpportunity } from "./scoring";
 import { fixedIncomeScenario, volatileRange } from "../finance/scenarios";
 import { executiveSummary, horizonConclusion, HORIZON_FOCUS } from "./synthesis";
 import { complianceMode, DISCLAIMERS } from "../compliance";
+import { productProjection } from "./projections";
 import { dateFmt } from "./context";
 
 export interface Connectors {
@@ -55,7 +56,7 @@ export function scenarioFor(o: Opportunity, h: Horizon, ctx: ResearchContext) {
   const days = o.model.holdToMaturityDays ?? HORIZON_DAYS[h];
   if (days <= 0) return null;
   const res = fixedIncomeScenario({
-    amount: ctx.input.capital,
+    amount: firstInvestable(ctx.input),
     days,
     grossAnnualRate: o.model.grossAnnualRate,
     taxRegime: o.model.taxRegime,
@@ -104,7 +105,7 @@ export async function runResearch(rawInput: ResearchInputRaw | ResearchInput, op
       const scenario = scenarioFor(o, h, ctx);
       const weights = resolveWeights(input, h);
       const { scores, total } = scoreOpportunity(o, h, weights, ctx.sources, scenario ? scenario.realNetAnnualized : null, now);
-      const vr = o.model?.type === "volatil" ? volatileRange(input.capital, o.model.annualVol, HORIZON_DAYS[h] / 365) : null;
+      const vr = o.model?.type === "volatil" ? volatileRange(firstInvestable(input), o.model.annualVol, HORIZON_DAYS[h] / 365) : null;
       o.byHorizon[h] = {
         horizon: h,
         eligible: vetoes.length === 0,
@@ -118,6 +119,13 @@ export async function runResearch(rawInput: ResearchInputRaw | ResearchInput, op
     }
   }
 
+  // Projeções por produto com capital + aportes nos prazos escolhidos (meses)
+  const horizonMonths = input.horizonMonths.length
+    ? [...new Set(input.horizonMonths)].sort((a, b) => a - b)
+    : [...new Set(horizons.map((h) => DEFAULT_HORIZON_MONTHS[h]))].sort((a, b) => a - b);
+  const pctx = { initial: input.capital, monthly: input.monthlyContribution, inflation: ctx.hyp.ipca, now };
+  for (const o of opportunities) o.projections = horizonMonths.map((m) => productProjection(o, m, pctx));
+
   const audit = runAudit(ctx, opportunities);
   opportunities = audit.kept;
   const byId = new Map(opportunities.map((o) => [o.id, o]));
@@ -128,7 +136,7 @@ export async function runResearch(rawInput: ResearchInputRaw | ResearchInput, op
     const vetoedIds = opportunities.filter((o) => o.byHorizon[h] && !o.byHorizon[h]!.eligible).map((o) => o.id);
     const verifiedEligible = rankedIds.filter((id) => byId.get(id)?.dataStatus === "verificado" || byId.get(id)?.dataStatus === "parcial");
     const base = { horizon: h, title: HORIZON_LABEL[h], focus: HORIZON_FOCUS[h], rankedIds, vetoedIds, insufficientBasis: verifiedEligible.length === 0, weights: resolveWeights(input, h) };
-    return { ...base, conclusion: horizonConclusion(base, byId) };
+    return { ...base, conclusion: horizonConclusion(base, byId, input.monthlyContribution) };
   });
 
   const runs = [toRun(macroR), toRun(tesouroR), toRun(krakenR), toRun(cvmR), { provider: "quotes_licensed" as const, label: LABEL.quotes_licensed, status: "nao_configurado" as const, durationMs: 0, fromCache: false, error: "Sem provedor licenciado configurado." }];
@@ -144,6 +152,7 @@ export async function runResearch(rawInput: ResearchInputRaw | ResearchInput, op
     id: opts.id ?? randomUUID(),
     version: 1,
     ...partial,
+    horizonMonths,
     mode: { regulatedAdvice: false, llmSynthesis: false, storage: "local_limitado" },
     orchestrator: orch,
     executiveSummary: summary,

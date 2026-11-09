@@ -11,9 +11,11 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:integration": "RUN_LIVE=1 vitest run tests/integration",
-    "evidence": "tsx scripts/live-evidence.ts"
+    "evidence": "tsx scripts/live-evidence.ts",
+    "test:e2e": "node tests/e2e/smoke.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0",
     "next": "^16.4.5",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
