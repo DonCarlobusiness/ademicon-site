@@ -6,7 +6,8 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import type { ResearchReport } from "./analysis/types";
 
-const DIR = path.join(process.cwd(), ".data", "reports");
+/** Em hospedagem serverless (Vercel) o disco do projeto é somente leitura: usa /tmp como cache temporário. */
+const DIR = process.env.VERCEL ? path.join("/tmp", "don-invest-reports") : path.join(process.cwd(), ".data", "reports");
 const ID_RE = /^[0-9a-f-]{36}$/i;
 /** Retenção: relatórios locais mais antigos que isto são apagados na listagem. */
 export const RETENTION_DAYS = 30;

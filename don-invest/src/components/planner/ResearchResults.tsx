@@ -7,6 +7,8 @@ import { HORIZON_LABEL, type Horizon } from "@/lib/analysis/input";
 import { formatMonths } from "@/lib/finance/projection";
 import { fmtBRL } from "@/lib/format";
 import { StateBadge } from "./StateBadge";
+import { downloadText } from "@/lib/client-store";
+import { reportToCsv } from "@/lib/export";
 import { formatReferenceBR } from "@/lib/market-data/time";
 
 const dt = (iso: string | null) => (iso ? new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Bahia", dateStyle: "short", timeStyle: "short" }).format(new Date(iso)) : "—");
@@ -189,7 +191,7 @@ export function ResearchResults({ report: r, onChangeValue, onChangeTerm }: { re
           <button type="button" onClick={onChangeValue} className="rounded-lg border border-navy-600 px-3 py-2 hover:border-gold-500">Alterar valor</button>
           <button type="button" onClick={onChangeTerm} className="rounded-lg border border-navy-600 px-3 py-2 hover:border-gold-500">Alterar prazo</button>
           <Link href="/pesquisar" className="rounded-lg border border-navy-600 px-3 py-2 hover:border-gold-500">Comparar com outra opção</Link>
-          <a href={`/api/reports/${r.id}?format=csv`} className="rounded-lg border border-navy-600 px-3 py-2 hover:border-gold-500">Exportar CSV</a>
+          <button type="button" onClick={() => downloadText(`don-invest-${r.id.slice(0, 8)}.csv`, reportToCsv(r), "text/csv;charset=utf-8")} className="rounded-lg border border-navy-600 px-3 py-2 hover:border-gold-500">Exportar CSV</button>
           <button type="button" disabled title="Exportação em PDF ainda não implementada" className="rounded-lg border border-navy-700 px-3 py-2 text-slate-500">PDF (em breve)</button>
         </div>
       </div>

@@ -29,8 +29,9 @@ export async function POST(req: Request) {
   }
   try {
     const report = await runResearch(parsed.data);
-    await saveReport(report);
-    return NextResponse.json({ id: report.id, status: report.status, providerRuns: report.providerRuns });
+    // Cache opcional no servidor; o histórico oficial fica no navegador do usuário.
+    await saveReport(report).catch(() => undefined);
+    return NextResponse.json({ id: report.id, status: report.status, providerRuns: report.providerRuns, report });
   } catch (e) {
     console.error("[research] falha inesperada:", e instanceof Error ? e.message : e);
     return NextResponse.json({ error: "Falha inesperada ao executar a pesquisa. Nenhum dado foi inventado." }, { status: 500 });

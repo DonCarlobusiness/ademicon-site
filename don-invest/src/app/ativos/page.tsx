@@ -1,33 +1,36 @@
+"use client";
+
 import Link from "next/link";
-import { latestReport } from "@/lib/store";
+import { useState } from "react";
 import { Section, StatusBadge } from "@/components/ui";
-import { formatDateTimeBR } from "@/lib/market-data/time";
+import { Loading, NoResearchYet } from "@/components/EmptyState";
+import { useLatestReport } from "@/lib/client-store";
+import { formatDateTimeBR, formatReferenceBR } from "@/lib/market-data/time";
 
-export const dynamic = "force-dynamic";
-export const metadata = { title: "Ativos pesquisados — DON INVEST" };
-
-export default async function Ativos({ searchParams }: { searchParams: Promise<{ classe?: string; moeda?: string }> }) {
-  const sp = await searchParams;
-  const r = await latestReport();
-  if (!r) return <Section title="Ativos"><p className="text-sm text-slate-400">Nenhuma pesquisa ainda. <Link className="text-electric-400" href="/pesquisar">Pesquisar agora</Link>.</p></Section>;
+export default function Ativos() {
+  const r = useLatestReport();
+  const [classe, setClasse] = useState("");
+  const [moeda, setMoeda] = useState("");
+  if (r === undefined) return <Loading />;
+  if (!r) return <NoResearchYet what="A lista de ativos pesquisados" />;
   const classes = [...new Set(r.opportunities.map((o) => o.classLabel))];
-  const items = r.opportunities.filter((o) => (!sp.classe || o.classLabel === sp.classe) && (!sp.moeda || o.currency === sp.moeda));
+  const items = r.opportunities.filter((o) => (!classe || o.classLabel === classe) && (!moeda || o.currency === moeda));
   const src = new Map(r.evidence.map((s) => [s.id, s]));
+  const sel = "min-h-11 w-full min-w-0 max-w-full rounded-lg border border-navy-600 bg-navy-900 px-3 py-2 sm:w-auto";
   return (
-    <Section title="Ativos da pesquisa mais recente" subtitle={`Pesquisa de ${formatDateTimeBR(r.createdAt)}. Filtros por classe e moeda.`}>
-      <form className="mb-4 grid gap-2 text-base sm:flex sm:flex-wrap sm:text-sm">
-        <select name="classe" defaultValue={sp.classe ?? ""} className="min-h-11 w-full min-w-0 max-w-full rounded-lg border border-navy-600 bg-navy-900 px-3 py-2 sm:w-auto" aria-label="Classe">
+    <Section title="Ativos da pesquisa mais recente" subtitle={`Pesquisa de ${formatDateTimeBR(r.createdAt)}. Filtre por classe e moeda.`}>
+      <div className="mb-4 grid gap-2 text-base sm:flex sm:flex-wrap sm:text-sm">
+        <select value={classe} onChange={(e) => setClasse(e.target.value)} className={sel} aria-label="Classe">
           <option value="">Todas as classes</option>
           {classes.map((c) => <option key={c}>{c}</option>)}
         </select>
-        <select name="moeda" defaultValue={sp.moeda ?? ""} className="min-h-11 w-full min-w-0 rounded-lg border border-navy-600 bg-navy-900 px-3 py-2 sm:w-auto" aria-label="Moeda">
+        <select value={moeda} onChange={(e) => setMoeda(e.target.value)} className={sel} aria-label="Moeda">
           <option value="">Todas as moedas</option><option>BRL</option><option>USD</option>
         </select>
-        <button className="min-h-11 rounded-lg bg-navy-700 px-4 py-2 text-gold-400">Filtrar</button>
-      </form>
+      </div>
       <div className="overflow-x-auto">
         <table className="data w-full min-w-[800px]">
-          <thead><tr><th>Ativo</th><th>Classe</th><th>Taxa/cotação</th><th>Fonte principal</th><th>Atualização</th><th>Status</th></tr></thead>
+          <thead><tr><th>Ativo</th><th>Classe</th><th>Taxa/cotação</th><th>Fonte principal</th><th>Referência</th><th>Status</th></tr></thead>
           <tbody>
             {items.map((o) => {
               const s = src.get(o.rateOrPrice.sourceIds[0]);
@@ -37,7 +40,7 @@ export default async function Ativos({ searchParams }: { searchParams: Promise<{
                   <td className="text-xs">{o.classLabel}</td>
                   <td className="text-xs">{o.rateOrPrice.display}</td>
                   <td className="text-xs">{s ? <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" className="text-electric-400 hover:underline">{s.label}</a> : "—"}</td>
-                  <td className="text-xs">{formatDateTimeBR(o.observedAt)}</td>
+                  <td className="text-xs">{formatReferenceBR(o.observedAt)}</td>
                   <td><StatusBadge s={o.dataStatus} /></td>
                 </tr>
               );
@@ -45,7 +48,7 @@ export default async function Ativos({ searchParams }: { searchParams: Promise<{
           </tbody>
         </table>
       </div>
-      <p className="mt-4 text-xs text-slate-500">Ações, FIIs, ETFs e REITs não aparecem porque não há provedor licenciado configurado (ver Fontes & Config.).</p>
+      <p className="mt-4 text-xs text-slate-500">Ações, FIIs, ETFs e REITs não aparecem porque não há provedor licenciado de cotações configurado.</p>
     </Section>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { saveReportLocal } from "@/lib/client-store";
 
 const LABELS: Record<string, string> = {
   risco: "Segurança",
@@ -28,6 +29,7 @@ export function WeightsEditor({ input, horizon, weights }: { input: Record<strin
       const res = await fetch("/api/research", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "Erro");
+      saveReportLocal(json.report);
       router.push(`/relatorios/${json.id}`);
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));

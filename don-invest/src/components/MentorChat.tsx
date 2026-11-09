@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLatestReport } from "@/lib/client-store";
 
 interface Msg { role: "user" | "mentor"; text: string; meta?: string }
 
@@ -8,6 +9,7 @@ export function MentorChat({ configured }: { configured: boolean }) {
   const [q, setQ] = useState("");
   const [msgs, setMsgs] = useState<Msg[]>([]);
   const [busy, setBusy] = useState(false);
+  const latest = useLatestReport();
 
   async function send(e: React.FormEvent) {
     e.preventDefault();
@@ -17,7 +19,7 @@ export function MentorChat({ configured }: { configured: boolean }) {
     setQ("");
     setBusy(true);
     try {
-      const res = await fetch("/api/mentor", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }) });
+      const res = await fetch("/api/mentor", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question, report: latest ?? undefined }) });
       const j = await res.json();
       if (!res.ok) throw new Error(j.error ?? "Erro");
       const meta = [`ferramentas: ${j.toolCalls.map((t: { name: string }) => t.name).join(", ") || "nenhuma"}`, j.filters ? `parâmetros sugeridos: ${JSON.stringify(j.filters)}` : ""].filter(Boolean).join(" · ");

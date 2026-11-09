@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { saveReportLocal } from "@/lib/client-store";
 
 type Horizon = "curto" | "medio" | "longo" | "indefinido";
 
@@ -116,6 +117,7 @@ export function ResearchForm() {
         const issues = json.issues ? Object.entries(json.issues).map(([k, v]) => `${k}: ${(v as string[]).join(", ")}`).join(" · ") : "";
         throw new Error(`${json.error ?? "Erro"} ${issues}`);
       }
+      saveReportLocal(json.report);
       router.push(`/relatorios/${json.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

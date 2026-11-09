@@ -11,6 +11,7 @@ import {
 } from "@/lib/finance/projection";
 import { fmtBRL, fmtPct, parsePctInput } from "@/lib/format";
 import type { ResearchReport } from "@/lib/analysis/types";
+import { saveReportLocal } from "@/lib/client-store";
 
 type Objective = "renda_passiva" | "crescimento" | "preservacao" | "imovel" | "aposentadoria" | "liberdade_financeira";
 type Liquidity = "imediata" | "ate_30d" | "nao_preve";
@@ -199,8 +200,9 @@ export function Planner({ withResearch = true }: { withResearch?: boolean }) {
         const issues = json.issues ? Object.values(json.issues as Record<string, string[]>).flat().join(" ") : "";
         throw new Error(`${json.error ?? "Erro na pesquisa."} ${issues}`.trim());
       }
-      const rep = await fetch(`/api/reports/${json.id}`).then((r) => r.json());
-      setReport(rep as ResearchReport);
+      const rep = json.report as ResearchReport;
+      saveReportLocal(rep);
+      setReport(rep);
       setTimeout(() => document.getElementById("resultado-pesquisa")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
     } catch (e) {
       setResearchErr(e instanceof TypeError ? "Erro de conexão com o servidor. Verifique sua internet e tente novamente." : e instanceof Error ? e.message : String(e));

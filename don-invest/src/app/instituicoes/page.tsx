@@ -1,14 +1,14 @@
-import Link from "next/link";
-import { latestReport } from "@/lib/store";
+"use client";
+
+import { useLatestReport } from "@/lib/client-store";
+import { Loading, NoResearchYet } from "@/components/EmptyState";
 import { Badge, Section } from "@/components/ui";
 import { formatDateTimeBR } from "@/lib/market-data/time";
 
-export const dynamic = "force-dynamic";
-export const metadata = { title: "Instituições — DON INVEST" };
-
-export default async function Instituicoes() {
-  const r = await latestReport();
-  if (!r) return <Section title="Instituições"><p className="text-sm text-slate-400">Faça uma <Link className="text-electric-400" href="/pesquisar">pesquisa</Link> para ver o comparador.</p></Section>;
+export default function Instituicoes() {
+  const r = useLatestReport();
+  if (r === undefined) return <Loading />;
+  if (!r) return <NoResearchYet what="O comparador de bancos e corretoras" />;
   return (
     <Section title="Bancos, programas e exchanges" subtitle="Somente o que foi verificado é marcado como tal; o restante aparece como regra catalogada ou não verificado.">
       <div className="grid gap-4 md:grid-cols-2">

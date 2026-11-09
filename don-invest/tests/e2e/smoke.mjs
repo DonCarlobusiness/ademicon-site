@@ -95,6 +95,23 @@ check("13. Celular: resultado em cartões, sem tabela larga e sem rolagem latera
 check("14. Desktop: menu completo no topo, sem barra inferior", (await p.locator("header nav").isVisible()) && !(await p.locator("nav[aria-label=Principal].fixed").isVisible()));
 check("15. Desktop: resultado em tabela", await p.locator("#resultado-pesquisa table").first().isVisible());
 
+// Hospedagem serverless: relatório que o servidor não tem precisa abrir a partir do navegador
+const fakeId = "11111111-2222-4333-8444-555555555555";
+await p.evaluate((fid) => {
+  const idx = JSON.parse(localStorage.getItem("don-invest:reports"));
+  const rep = JSON.parse(localStorage.getItem("don-invest:report:" + idx[0].id));
+  rep.id = fid;
+  localStorage.setItem("don-invest:report:" + fid, JSON.stringify(rep));
+}, fakeId);
+await p.goto(BASE + "/relatorios/" + fakeId);
+await p.waitForSelector("text=Resumo executivo", { timeout: 15000 }).catch(() => {});
+check("17. Relatório abre a partir do histórico do navegador (sem depender do disco do servidor)", (await p.locator("text=Trilha de evidências").count()) > 0);
+await p.goto(BASE + "/dashboard");
+await p.waitForSelector("text=Pesquisas anteriores", { timeout: 15000 }).catch(() => {});
+check("18. Histórico de pesquisas lido do navegador", (await p.locator("text=Pesquisas anteriores").count()) > 0);
+await p.goto(BASE + "/");
+await p.waitForSelector("#capital");
+
 const PAGES = ["/", "/simulador", "/pesquisar", "/dashboard", "/ativos", "/instituicoes", "/configuracoes", "/mentor", "/carteira", "/academy"];
 for (const [w, page] of [[360, m], [1440, p]]) {
   const over = [];
