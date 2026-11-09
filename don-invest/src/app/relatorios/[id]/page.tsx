@@ -5,7 +5,7 @@ import { Badge, FreshnessBadge, ScoreBar, Section, StatusBadge } from "@/compone
 import { WeightsEditor } from "@/components/WeightsEditor";
 import { DIMENSION_LABEL, type Opportunity, type ResearchReport } from "@/lib/analysis/types";
 import { brl, pctFmt } from "@/lib/analysis/context";
-import { formatAge, formatDateBR, formatDateTimeBR } from "@/lib/market-data/time";
+import { formatAge, formatDateBR, formatDateTimeBR, formatReferenceBR } from "@/lib/market-data/time";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Relatório de pesquisa — DON INVEST" };
@@ -84,14 +84,15 @@ function OpportunityDetail({ o, report }: { o: Opportunity; report: ResearchRepo
       </div>
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         {Object.values(o.byHorizon).map((a) => a && (
-          <div key={a.horizon} className="rounded-lg border border-navy-700 p-3">
-            <p className="flex items-center justify-between text-sm font-semibold">
+          <div key={a.horizon} className="min-w-0 rounded-lg border border-navy-700 p-3">
+            <p className="flex flex-wrap items-center justify-between gap-2 text-sm font-semibold">
               <span>{report.horizons.find((h) => h.horizon === a.horizon)?.title}</span>
               <ScoreBar value={a.total} />
             </p>
             {a.vetoes.length > 0 && <ul className="mt-2 list-disc pl-4 text-xs text-red-300">{a.vetoes.map((v) => <li key={v}>Veto: {v}</li>)}</ul>}
             {a.warnings.length > 0 && <ul className="mt-2 list-disc pl-4 text-xs text-amber-300">{a.warnings.map((v) => <li key={v}>{v}</li>)}</ul>}
-            <table className="data mt-2 w-full">
+            <div className="mt-2 overflow-x-auto">
+            <table className="data w-full min-w-[480px]">
               <thead><tr><th>Dimensão</th><th>Nota</th><th>Peso</th><th>Justificativa</th></tr></thead>
               <tbody>
                 {a.scores.map((s) => (
@@ -99,6 +100,7 @@ function OpportunityDetail({ o, report }: { o: Opportunity; report: ResearchRepo
                 ))}
               </tbody>
             </table>
+            </div>
             {a.scenario && (
               <div className="mt-3 rounded-lg bg-navy-800 p-3 text-xs">
                 <p className="font-semibold text-electric-400">Cenário ilustrativo (HIPÓTESE — não é promessa) · {a.scenario.label}</p>
@@ -250,7 +252,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
                   <td className="text-xs">{o.taxes}</td>
                   <td className="text-xs">{o.costs}</td>
                   <td className="text-xs">{o.protection}</td>
-                  <td className="text-xs">{formatDateTimeBR(o.observedAt)}</td>
+                  <td className="text-xs">{formatReferenceBR(o.observedAt)}</td>
                   <td><SourceLinks ids={o.sourceIds} report={r} /></td>
                 </tr>
               ))}
@@ -308,7 +310,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
                   <td className="max-w-md text-xs">{s.url ? <a href={s.url} target="_blank" rel="noopener noreferrer nofollow" className="text-electric-400 hover:underline break-all">{s.label}</a> : s.label}{s.note && <div className="text-slate-500">{s.note}</div>}</td>
                   <td className="text-xs">{METHOD_LABEL[s.method]}</td>
                   <td className="text-xs">{formatDateTimeBR(s.collectedAt)}</td>
-                  <td className="text-xs">{formatDateTimeBR(s.referenceAt)}</td>
+                  <td className="text-xs">{formatReferenceBR(s.referenceAt)}</td>
                   <td className="text-xs">{s.method === "regra_catalogada" ? "—" : formatAge(s.ageMinutes)}</td>
                   <td className="text-xs tabular-nums">{Math.round(s.confidence * 100)}%</td>
                   <td><FreshnessBadge f={s.freshness} /></td>

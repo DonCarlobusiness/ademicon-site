@@ -30,7 +30,7 @@ const OBJECTIVES: { v: Objective; l: string }[] = [
 ];
 
 const STORAGE_KEY = "don-invest:planner:v1";
-const field = "w-full rounded-lg border border-navy-600 bg-navy-900 px-3 py-2 text-slate-100 focus:border-gold-500";
+const field = "min-h-11 w-full min-w-0 rounded-lg border border-navy-600 bg-navy-900 px-3 py-2 text-base text-slate-100 focus:border-gold-500 sm:min-h-10";
 const lbl = "mb-1 block text-sm font-medium text-slate-300";
 const dateBR = (iso: string) => new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Bahia", dateStyle: "short" }).format(new Date(iso));
 
@@ -232,7 +232,7 @@ export function Planner({ withResearch = true }: { withResearch?: boolean }) {
               hint={capital === 0 ? "Capital zero: a projeção usará apenas os aportes mensais." : "Qualquer valor: R$ 500, R$ 750, R$ 10.000…"} />
             <div className="mt-1 flex flex-wrap gap-2">
               {[500, 750, 1000, 10000].map((v) => (
-                <button key={v} type="button" onClick={() => setCapital(v)} className={`rounded-full border px-3 py-1 text-xs ${capital === v ? "border-gold-500 text-gold-400" : "border-navy-600 text-slate-300 hover:border-gold-600"}`}>{fmtBRL(v, 0)}</button>
+                <button key={v} type="button" onClick={() => setCapital(v)} className={`min-h-10 rounded-full border px-3 text-sm sm:min-h-8 sm:text-xs ${capital === v ? "border-gold-500 text-gold-400" : "border-navy-600 text-slate-300 hover:border-gold-600"}`}>{fmtBRL(v, 0)}</button>
               ))}
             </div>
           </div>
@@ -240,7 +240,7 @@ export function Planner({ withResearch = true }: { withResearch?: boolean }) {
             <MoneyInput id="aporte" label="Aporte mensal" value={monthly} onChange={setMonthly} hint="Depositado no fim de cada mês." />
             <div className="mt-1 flex flex-wrap gap-2">
               {[0, 50, 250, 500].map((v) => (
-                <button key={v} type="button" onClick={() => setMonthly(v)} className={`rounded-full border px-3 py-1 text-xs ${monthly === v ? "border-gold-500 text-gold-400" : "border-navy-600 text-slate-300 hover:border-gold-600"}`}>{v === 0 ? "sem aporte" : `${fmtBRL(v, 0)}/mês`}</button>
+                <button key={v} type="button" onClick={() => setMonthly(v)} className={`min-h-10 rounded-full border px-3 text-sm sm:min-h-8 sm:text-xs ${monthly === v ? "border-gold-500 text-gold-400" : "border-navy-600 text-slate-300 hover:border-gold-600"}`}>{v === 0 ? "sem aporte" : `${fmtBRL(v, 0)}/mês`}</button>
               ))}
             </div>
           </div>
@@ -251,18 +251,18 @@ export function Planner({ withResearch = true }: { withResearch?: boolean }) {
           <div className="flex flex-wrap gap-2">
             {STANDARD_HORIZON_MONTHS.map((m) => (
               <button key={m} type="button" aria-pressed={months === m} onClick={() => setMonths(m)}
-                className={`rounded-lg border px-3 py-1.5 text-sm ${months === m ? "border-gold-500 bg-gold-500/10 text-gold-400" : "border-navy-600 text-slate-300 hover:border-gold-600"}`}>
+                className={`min-h-11 rounded-lg border px-3 text-sm sm:min-h-9 ${months === m ? "border-gold-500 bg-gold-500/10 text-gold-400" : "border-navy-600 text-slate-300 hover:border-gold-600"}`}>
                 {formatMonths(m)}
               </button>
             ))}
             <span className="flex items-center gap-1">
               <label htmlFor="prazo-custom" className="sr-only">Prazo personalizado (meses, ou anos com a letra a)</label>
               <input id="prazo-custom" value={customText} onChange={(e) => setCustomText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), applyCustom())}
-                placeholder="ex.: 18 ou 7a" inputMode="text" className="w-28 rounded-lg border border-navy-600 bg-navy-900 px-2 py-1.5 text-sm" />
-              <button type="button" onClick={applyCustom} className="rounded-lg border border-navy-600 px-2 py-1.5 text-sm text-slate-300 hover:border-gold-600">OK</button>
+                placeholder="ex.: 18 ou 7a" inputMode="text" className="min-h-11 w-28 rounded-lg border border-navy-600 bg-navy-900 px-2 text-base sm:min-h-9 sm:text-sm" />
+              <button type="button" onClick={applyCustom} className="min-h-11 rounded-lg border border-navy-600 px-3 text-sm text-slate-300 hover:border-gold-600 sm:min-h-9">OK</button>
             </span>
           </div>
-          <label className="mt-2 flex items-center gap-2 text-sm text-slate-300">
+          <label className="mt-2 flex min-h-11 items-center gap-3 text-sm text-slate-300 sm:min-h-0">
             <input type="checkbox" checked={compareAll} onChange={(e) => setCompareAll(e.target.checked)} className="accent-[#d4af37]" />
             Comparar todos os horizontes (1, 3, 6 e 12 meses; 3, 5, 10, 20 e 30 anos)
           </label>
@@ -334,7 +334,7 @@ export function Planner({ withResearch = true }: { withResearch?: boolean }) {
         </div>
 
         <details className="mt-3 rounded-lg border border-navy-700 p-3" open>
-          <summary className="cursor-pointer text-sm font-semibold text-slate-200">Premissas dos cenários (taxas anuais ilustrativas e editáveis)</summary>
+          <summary className="cursor-pointer py-1.5 text-sm font-semibold text-slate-200">Premissas dos cenários (taxas anuais ilustrativas e editáveis)</summary>
           <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {scenarios.map((s, i) => (
               <div key={s.key}>
@@ -383,7 +383,7 @@ export function Planner({ withResearch = true }: { withResearch?: boolean }) {
             <p className="mt-5 text-sm text-slate-300">
               Com <strong>{fmtBRL(capital)}</strong> iniciais{monthly > 0 && <> e <strong>{fmtBRL(monthly)}/mês</strong></>}, em <strong>{formatMonths(months)}</strong>, no cenário{" "}
               <label htmlFor="cenario-foco" className="sr-only">Cenário em destaque</label>
-              <select id="cenario-foco" value={chartScenario} onChange={(e) => setChartScenario(Number(e.target.value))} className="rounded border border-navy-600 bg-navy-900 px-1 py-0.5 text-gold-400">
+              <select id="cenario-foco" value={chartScenario} onChange={(e) => setChartScenario(Number(e.target.value))} className="mt-1 min-h-10 max-w-full rounded border border-navy-600 bg-navy-900 px-2 text-base text-gold-400 sm:mt-0 sm:min-h-0 sm:py-0.5 sm:text-sm">
                 {scenarios.map((s, i) => <option key={s.key} value={i}>{s.label.toLowerCase()} ({rates[i]}% a.a.)</option>)}
               </select>:
             </p>
@@ -417,7 +417,7 @@ export function Planner({ withResearch = true }: { withResearch?: boolean }) {
 
             <h3 className="mt-6 text-sm font-semibold text-slate-200">Comparação por prazo e cenário (patrimônio bruto estimado)</h3>
             <div className="mt-2 overflow-x-auto">
-              <table className="data w-full min-w-[640px]">
+              <table className="data sticky-first w-full min-w-[640px]">
                 <thead>
                   <tr><th>Prazo</th><th>Total investido</th>{scenarios.map((s, i) => <th key={s.key}>{s.label}<span className="block text-[10px] normal-case text-slate-500">{rates[i]}% a.a.</span></th>)}</tr>
                 </thead>
@@ -438,7 +438,7 @@ export function Planner({ withResearch = true }: { withResearch?: boolean }) {
             </div>
 
             <details className="mt-4">
-              <summary className="cursor-pointer text-sm text-electric-400">Ver tabela {focus.months <= 24 ? "mês a mês" : "ano a ano"} (principal × juros)</summary>
+              <summary className="cursor-pointer py-2.5 text-sm text-electric-400">Ver tabela {focus.months <= 24 ? "mês a mês" : "ano a ano"} (principal × juros)</summary>
               <div className="mt-2 max-h-96 overflow-auto">
                 <table className="data w-full">
                   <thead><tr><th>{focus.months <= 24 ? "Mês" : "Ano"}</th><th>Principal acumulado</th><th>Juros/acréscimos</th><th>Patrimônio</th></tr></thead>

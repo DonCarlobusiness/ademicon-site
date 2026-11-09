@@ -48,7 +48,7 @@ export function WeightsEditor({ input, horizon, weights }: { input: Record<strin
       </div>
       <p className="mt-2 text-xs text-slate-500">Os pesos são normalizados para somar 100%. Uma nova pesquisa é feita com dados atualizados.</p>
       {err && <p role="alert" className="text-xs text-red-300">{err}</p>}
-      <button type="button" disabled={busy} onClick={recalc} className="mt-2 rounded-lg bg-navy-700 px-3 py-1.5 text-sm text-gold-400 hover:bg-navy-600 disabled:opacity-50">
+      <button type="button" disabled={busy} onClick={recalc} className="mt-2 min-h-11 rounded-lg bg-navy-700 px-4 text-sm text-gold-400 hover:bg-navy-600 disabled:opacity-50">
         {busy ? "Recalculando…" : "Recalcular"}
       </button>
     </details>

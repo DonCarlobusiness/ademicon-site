@@ -84,6 +84,27 @@ const im = await m.getAttribute("#capital", "inputmode");
 const fs = await m.$eval("#capital", (el) => parseFloat(getComputedStyle(el).fontSize));
 check("9. Mobile 360px sem rolagem lateral, teclado numérico e fonte legível", sw <= 360 && im === "decimal" && fs >= 16, `scrollWidth=${sw}, inputmode=${im}, fonte=${fs}px`);
 if (SHOTS) await m.screenshot({ path: `${SHOTS}/e2e-mobile.png` });
+check("12. Celular: barra de navegação inferior visível e menu do topo oculto", (await m.locator("nav[aria-label=Principal].fixed").isVisible()) && !(await m.locator("header nav").isVisible()));
+await m.fill("#aporte", "250");
+await m.click('button:text-is("Pesquisar oportunidades agora")');
+await m.waitForSelector("#resultado-pesquisa h3", { timeout: 90000 });
+const cards = await m.locator("#resultado-pesquisa ul.md\\:hidden > li").count();
+const tableVisible = await m.locator("#resultado-pesquisa table").first().isVisible();
+const swRes = await m.evaluate(() => document.documentElement.scrollWidth);
+check("13. Celular: resultado em cartões, sem tabela larga e sem rolagem lateral", cards > 0 && !tableVisible && swRes <= 360, `${cards} cartões, scrollWidth=${swRes}`);
+check("14. Desktop: menu completo no topo, sem barra inferior", (await p.locator("header nav").isVisible()) && !(await p.locator("nav[aria-label=Principal].fixed").isVisible()));
+check("15. Desktop: resultado em tabela", await p.locator("#resultado-pesquisa table").first().isVisible());
+
+const PAGES = ["/", "/simulador", "/pesquisar", "/dashboard", "/ativos", "/instituicoes", "/configuracoes", "/mentor", "/carteira", "/academy"];
+for (const [w, page] of [[360, m], [1440, p]]) {
+  const over = [];
+  for (const path of PAGES) {
+    await page.goto(BASE + path);
+    const sw2 = await page.evaluate(() => document.documentElement.scrollWidth);
+    if (sw2 > w) over.push(`${path}=${sw2}`);
+  }
+  check(`16. ${w}px: nenhuma página com rolagem lateral`, over.length === 0, over.join(", "));
+}
 
 check("Sem erros de JavaScript na página", errors.length === 0, errors.join(" | "));
 await b.close();

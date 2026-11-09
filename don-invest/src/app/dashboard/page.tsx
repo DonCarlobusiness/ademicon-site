@@ -28,7 +28,7 @@ export default async function Dashboard() {
           <Section title="Pesquisa mais recente" subtitle={`${formatDateTimeBR(last.createdAt)} · capital declarado ${brl(last.input.capital)}`}>
             <StatusBadge s={last.status} />
             <ul className="mt-3 list-disc space-y-1 pl-5 text-sm">{last.executiveSummary.slice(2).map((s) => <li key={s}>{s}</li>)}</ul>
-            <Link href={`/relatorios/${last.id}`} className="mt-4 inline-block text-sm text-electric-400 hover:underline">Abrir relatório completo →</Link>
+            <Link href={`/relatorios/${last.id}`} className="mt-3 inline-block py-2 text-sm text-electric-400 hover:underline">Abrir relatório completo →</Link>
           </Section>
           <Section title="Macro confirmado (BCB)" subtitle="Valores e datas de referência oficiais.">
             <ul className="space-y-2 text-sm">

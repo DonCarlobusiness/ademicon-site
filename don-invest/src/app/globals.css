@@ -51,6 +51,24 @@ table.data th {
   white-space: nowrap;
 }
 
+table.sticky-first th:first-child,
+table.sticky-first td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--color-navy-800);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
 table.data td {
   padding: 0.6rem 0.75rem;
   border-bottom: 1px solid color-mix(in oklab, var(--color-navy-700) 60%, transparent);

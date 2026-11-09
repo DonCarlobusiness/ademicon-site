@@ -32,6 +32,12 @@ export function formatDateBR(iso: string | null | undefined): string {
   return new Intl.DateTimeFormat("pt-BR", { timeZone: DISPLAY_TZ, dateStyle: "short" }).format(new Date(iso));
 }
 
+/** Datas oficiais (dd/mm/aaaa) são guardadas às 03:00Z; nelas mostramos só o dia, sem um horário que o dado não tem. */
+export function formatReferenceBR(iso: string | null | undefined): string {
+  if (!iso) return "—";
+  return iso.endsWith("T03:00:00.000Z") ? formatDateBR(iso) : formatDateTimeBR(iso);
+}
+
 export function formatAge(minutes: number | null): string {
   if (minutes === null) return "idade desconhecida";
   if (minutes < 60) return `${minutes} min`;

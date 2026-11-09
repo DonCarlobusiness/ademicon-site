@@ -15,15 +15,15 @@ export default async function Ativos({ searchParams }: { searchParams: Promise<{
   const src = new Map(r.evidence.map((s) => [s.id, s]));
   return (
     <Section title="Ativos da pesquisa mais recente" subtitle={`Pesquisa de ${formatDateTimeBR(r.createdAt)}. Filtros por classe e moeda.`}>
-      <form className="mb-4 flex flex-wrap gap-2 text-sm">
-        <select name="classe" defaultValue={sp.classe ?? ""} className="rounded-lg border border-navy-600 bg-navy-900 px-3 py-2" aria-label="Classe">
+      <form className="mb-4 grid gap-2 text-base sm:flex sm:flex-wrap sm:text-sm">
+        <select name="classe" defaultValue={sp.classe ?? ""} className="min-h-11 w-full min-w-0 max-w-full rounded-lg border border-navy-600 bg-navy-900 px-3 py-2 sm:w-auto" aria-label="Classe">
           <option value="">Todas as classes</option>
           {classes.map((c) => <option key={c}>{c}</option>)}
         </select>
-        <select name="moeda" defaultValue={sp.moeda ?? ""} className="rounded-lg border border-navy-600 bg-navy-900 px-3 py-2" aria-label="Moeda">
+        <select name="moeda" defaultValue={sp.moeda ?? ""} className="min-h-11 w-full min-w-0 rounded-lg border border-navy-600 bg-navy-900 px-3 py-2 sm:w-auto" aria-label="Moeda">
           <option value="">Todas as moedas</option><option>BRL</option><option>USD</option>
         </select>
-        <button className="rounded-lg bg-navy-700 px-3 py-2 text-gold-400">Filtrar</button>
+        <button className="min-h-11 rounded-lg bg-navy-700 px-4 py-2 text-gold-400">Filtrar</button>
       </form>
       <div className="overflow-x-auto">
         <table className="data w-full min-w-[800px]">

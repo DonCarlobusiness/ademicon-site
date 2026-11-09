@@ -49,6 +49,19 @@ Atrás de proxy corporativo, defina `HTTPS_PROXY` (e o CA via `NODE_EXTRA_CA_CER
 
 Detalhes: [docs/data-sources.md](docs/data-sources.md) · [docs/methodology.md](docs/methodology.md) · [docs/compliance.md](docs/compliance.md) · [docs/known-limitations.md](docs/known-limitations.md)
 
+## Celular e desktop
+
+A mesma aplicação se adapta à tela:
+
+| | Celular e tablet (< 1024 px) | Desktop (≥ 1024 px) |
+|---|---|---|
+| Navegação | Barra inferior fixa (Início, Pesquisar, Simulador, Mentor, Mais) | Menu completo no cabeçalho fixo, item ativo destacado |
+| Resultado da pesquisa | Cartões por opção, com projeções em lista | Tabela comparativa |
+| Campos | Teclado numérico, fonte ≥ 16 px (sem zoom no iPhone), alvos de toque ≥ 40–44 px | Mesmos campos, mais densos |
+| Gráfico | Mede a largura real; rótulos sempre legíveis | Idem |
+
+Também há manifesto e ícone: no celular, “Adicionar à tela inicial” abre o DON INVEST em tela cheia, respeitando as áreas seguras (notch e barra do sistema).
+
 ## Mentor IA (opcional)
 
 Com `ANTHROPIC_API_KEY` no servidor (`.env.local`), `/mentor` responde perguntas usando a pesquisa mais recente. O modelo (padrão `claude-opus-5-5`, configurável por `ANTHROPIC_MODEL`) não calcula: chama ferramentas que executam as funções testadas (`projetar_investimento`, `consultar_pesquisa`, `sugerir_filtros`). A resposta passa por auditoria automática que marca números não rastreados e bloqueia promessas de rentabilidade e “recomendo comprar”. Sem chave, a tela informa como configurar e todo o resto funciona.

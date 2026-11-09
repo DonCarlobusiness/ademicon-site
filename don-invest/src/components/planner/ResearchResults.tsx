@@ -7,6 +7,7 @@ import { HORIZON_LABEL, type Horizon } from "@/lib/analysis/input";
 import { formatMonths } from "@/lib/finance/projection";
 import { fmtBRL } from "@/lib/format";
 import { StateBadge } from "./StateBadge";
+import { formatReferenceBR } from "@/lib/market-data/time";
 
 const dt = (iso: string | null) => (iso ? new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Bahia", dateStyle: "short", timeStyle: "short" }).format(new Date(iso)) : "—");
 const dOnly = (iso: string) => new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Bahia", dateStyle: "short" }).format(new Date(iso));
@@ -44,7 +45,7 @@ function OppRow({ o, report, months }: { o: Opportunity; report: ResearchReport;
   return (
     <>
       <tr>
-        <td className="min-w-[12rem]">
+        <td className="min-w-[11rem] max-w-[15rem]">
           <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="text-left font-semibold text-slate-100 hover:text-gold-400">
             {open ? "▾" : "▸"} {o.name}
           </button>
@@ -59,46 +60,107 @@ function OppRow({ o, report, months }: { o: Opportunity; report: ResearchReport;
         <td className="min-w-[10rem] text-xs">
           <StateBadge s={o.dataStatus === "manual" ? "INFORMADO_USUARIO" : o.rateOrPrice.verified ? "DADO_OBSERVADO" : "INDISPONIVEL"} />
           <span className="mt-1 block">{o.rateOrPrice.display.split(" · ")[0]}</span>
-          <span className="block text-[11px] text-slate-500">ref. {dt(o.observedAt)}{primary?.url && <> · <a href={primary.url} target="_blank" rel="noopener noreferrer nofollow" className="text-electric-400 hover:underline">fonte</a></>}</span>
+          <span className="block text-[11px] text-slate-500">ref. {formatReferenceBR(o.observedAt)}{primary?.url && <> · <a href={primary.url} target="_blank" rel="noopener noreferrer nofollow" className="text-electric-400 hover:underline">fonte</a></>}</span>
         </td>
-        <td className="max-w-[14rem] text-[11px] text-slate-400">{o.liquidity}</td>
-        <td className="max-w-[12rem] text-[11px] text-slate-400">{o.risks[0]}<span className="block text-slate-500">{o.protection.split(".")[0]}.</span></td>
+        <td className="min-w-[11rem] text-xs text-slate-400">{o.liquidity}</td>
+        <td className="min-w-[13rem] text-xs text-slate-400">{o.risks[0]}<span className="block text-slate-500">{o.protection.split(".")[0]}.</span></td>
         {months.map((m) => <td key={m}><ProjectionCell p={projections.find((p) => p.months === m)} /></td>)}
       </tr>
       {open && (
         <tr>
           <td colSpan={5 + months.length} className="bg-navy-900/60">
-            <div className="grid gap-4 py-2 text-xs md:grid-cols-3">
-              <div>
-                <p className="font-semibold text-slate-200">Identificação e regras</p>
-                <p className="mt-1 text-slate-400">{o.identifier}</p>
-                <p className="mt-1"><span className="text-slate-500">Vencimento:</span> {o.maturity ?? "—"}</p>
-                <p className="mt-1"><span className="text-slate-500">Impostos:</span> {o.taxes}</p>
-                <p className="mt-1"><span className="text-slate-500">Custos:</span> {o.costs}</p>
-                <p className="mt-1"><span className="text-slate-500">Proteção:</span> {o.protection}</p>
-                {o.incomeNote && <p className="mt-1 text-gold-400">{o.incomeNote}</p>}
-              </div>
-              <div>
-                <p className="font-semibold text-slate-200">Riscos e o que falta saber</p>
-                <ul className="mt-1 list-disc pl-4 text-slate-400">{o.risks.map((r) => <li key={r}>{r}</li>)}</ul>
-                <ul className="mt-1 list-disc pl-4 text-slate-500">{o.missingInfo.map((r) => <li key={r}>{r}</li>)}</ul>
-              </div>
-              <div>
-                <p className="font-semibold text-slate-200">Onde verificar ou contratar</p>
-                <ul className="mt-1 space-y-1">
-                  {(o.whereToCheck ?? []).map((w) => (
-                    <li key={w.url}><a href={w.url} target="_blank" rel="noopener noreferrer nofollow" className="text-electric-400 hover:underline">{w.label} ↗</a>{w.kind === "usuario" && <span className="text-slate-500"> (informado por você)</span>}</li>
-                  ))}
-                </ul>
-                <p className="mt-1 text-[11px] text-slate-500">Links oficiais catalogados; o sistema não acessou essas páginas nesta pesquisa. Confirme taxa, mínimo e condições lá antes de decidir.</p>
-                <p className="mt-2 font-semibold text-slate-200">Notas das projeções</p>
-                <ul className="mt-1 list-disc pl-4 text-slate-500">{projections.map((p) => <li key={p.months}>{formatMonths(p.months)}: {p.note}</li>)}</ul>
-              </div>
-            </div>
+            <OppDetails o={o} />
           </td>
         </tr>
       )}
     </>
+  );
+}
+
+function OppDetails({ o }: { o: Opportunity }) {
+  const projections = o.projections ?? [];
+  return (
+            <div className="grid gap-4 py-2 text-xs md:grid-cols-3">
+      <div>
+        <p className="font-semibold text-slate-200">Identificação e regras</p>
+        <p className="mt-1 text-slate-400">{o.identifier}</p>
+        <p className="mt-1"><span className="text-slate-500">Vencimento:</span> {o.maturity ?? "—"}</p>
+        <p className="mt-1"><span className="text-slate-500">Impostos:</span> {o.taxes}</p>
+        <p className="mt-1"><span className="text-slate-500">Custos:</span> {o.costs}</p>
+        <p className="mt-1"><span className="text-slate-500">Proteção:</span> {o.protection}</p>
+        {o.incomeNote && <p className="mt-1 text-gold-400">{o.incomeNote}</p>}
+      </div>
+      <div>
+        <p className="font-semibold text-slate-200">Riscos e o que falta saber</p>
+        <ul className="mt-1 list-disc pl-4 text-slate-400">{o.risks.map((r) => <li key={r}>{r}</li>)}</ul>
+        <ul className="mt-1 list-disc pl-4 text-slate-500">{o.missingInfo.map((r) => <li key={r}>{r}</li>)}</ul>
+      </div>
+      <div>
+        <p className="font-semibold text-slate-200">Onde verificar ou contratar</p>
+        <ul className="mt-1 space-y-1">
+          {(o.whereToCheck ?? []).map((w) => (
+            <li key={w.url}><a href={w.url} target="_blank" rel="noopener noreferrer nofollow" className="text-electric-400 hover:underline">{w.label} ↗</a>{w.kind === "usuario" && <span className="text-slate-500"> (informado por você)</span>}</li>
+          ))}
+        </ul>
+        <p className="mt-1 text-[11px] text-slate-500">Links oficiais catalogados; o sistema não acessou essas páginas nesta pesquisa. Confirme taxa, mínimo e condições lá antes de decidir.</p>
+        <p className="mt-2 font-semibold text-slate-200">Notas das projeções</p>
+        <ul className="mt-1 list-disc pl-4 text-slate-500">{projections.map((p) => <li key={p.months}>{formatMonths(p.months)}: {p.note}</li>)}</ul>
+      </div>
+    </div>
+  );
+}
+
+/** Versão em cartão para telas pequenas: mesmo conteúdo da linha da tabela, sem rolagem lateral. */
+function OppCard({ o, report, months }: { o: Opportunity; report: ResearchReport; months: number[] }) {
+  const [open, setOpen] = useState(false);
+  const src = new Map(report.evidence.map((s) => [s.id, s]));
+  const primary = o.rateOrPrice.sourceIds.map((id) => src.get(id)).find(Boolean);
+  const projections = o.projections ?? [];
+  return (
+    <li className="rounded-xl border border-navy-700 bg-navy-900/60 p-3">
+      <p className="font-semibold text-slate-100">{o.name}</p>
+      <p className="text-xs text-slate-500">{o.classLabel} · {o.issuer}</p>
+      <dl className="mt-2 grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
+        <div className="col-span-2">
+          <dt className="text-slate-500">Taxa / preço observado</dt>
+          <dd className="mt-0.5">
+            <StateBadge s={o.dataStatus === "manual" ? "INFORMADO_USUARIO" : o.rateOrPrice.verified ? "DADO_OBSERVADO" : "INDISPONIVEL"} />{" "}
+            {o.rateOrPrice.display.split(" · ")[0]}
+            <span className="block text-slate-500">ref. {formatReferenceBR(o.observedAt)}{primary?.url && <> · <a href={primary.url} target="_blank" rel="noopener noreferrer nofollow" className="text-electric-400 underline">fonte</a></>}</span>
+          </dd>
+        </div>
+        <div>
+          <dt className="text-slate-500">Mínimo</dt>
+          <dd>{o.minimum.value !== null && o.minimum.value !== undefined ? fmtBRL(o.minimum.value) : "—"}
+            <span className={`block ${o.viableWithCapital === false ? "text-red-300" : "text-emerald-400"}`}>{o.viableWithCapital === false ? "acima do seu valor" : o.viableWithCapital ? "cabe no seu valor" : "não verificado"}</span>
+          </dd>
+        </div>
+        <div>
+          <dt className="text-slate-500">Proteção</dt>
+          <dd className="text-slate-300">{o.protection.split(".")[0]}.</dd>
+        </div>
+        <div className="col-span-2">
+          <dt className="text-slate-500">Liquidez</dt>
+          <dd className="text-slate-300">{o.liquidity}</dd>
+        </div>
+        <div className="col-span-2">
+          <dt className="text-slate-500">Principal risco</dt>
+          <dd className="text-slate-300">{o.risks[0]}</dd>
+        </div>
+      </dl>
+      <ul className="mt-3 divide-y divide-navy-700 rounded-lg border border-navy-700">
+        {months.map((m) => (
+          <li key={m} className="flex items-start justify-between gap-3 px-3 py-2">
+            <span className="shrink-0 text-xs font-semibold text-slate-300">Em {formatMonths(m)}</span>
+            <span className="min-w-0 text-right"><ProjectionCell p={projections.find((p) => p.months === m)} /></span>
+          </li>
+        ))}
+      </ul>
+      <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="mt-2 min-h-11 w-full rounded-lg border border-navy-600 text-sm text-electric-400">
+        {open ? "Ocultar detalhes" : "Detalhes, riscos e onde verificar"}
+      </button>
+      {open && <div className="mt-2"><OppDetails o={o} /></div>}
+    </li>
   );
 }
 
@@ -165,7 +227,9 @@ export function ResearchResults({ report: r, onChangeValue, onChangeTerm }: { re
             {h.insufficientBasis || ids.length === 0 ? (
               <p className="mt-2 rounded-lg border border-amber-500/50 bg-amber-500/10 p-3 text-sm text-amber-100">Não há base suficiente para destacar uma opção neste prazo com os dados obtidos.</p>
             ) : (
-              <div className="mt-2 overflow-x-auto">
+              <>
+              <ul className="mt-2 space-y-3 md:hidden">{ids.map((id) => <OppCard key={id} o={byId.get(id)!} report={r} months={shownMonths} />)}</ul>
+              <div className="mt-2 hidden overflow-x-auto md:block">
                 <table className="data w-full min-w-[900px]">
                   <thead>
                     <tr><th>Opção</th><th>Mínimo</th><th>Taxa / preço observado</th><th>Liquidez</th><th>Risco e proteção</th>{shownMonths.map((m) => <th key={m}>Em {formatMonths(m)}</th>)}</tr>
@@ -173,6 +237,7 @@ export function ResearchResults({ report: r, onChangeValue, onChangeTerm }: { re
                   <tbody>{ids.map((id) => <OppRow key={id} o={byId.get(id)!} report={r} months={shownMonths} />)}</tbody>
                 </table>
               </div>
+              </>
             )}
             {h.vetoedIds.length > 0 && (
               <details className="mt-2 text-xs">
