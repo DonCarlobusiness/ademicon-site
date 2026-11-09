@@ -12,7 +12,15 @@ Fluxo principal (página inicial `/`):
 
 > Ferramenta de pesquisa e educação. **Não é consultoria individualizada (Res. CVM 19/20) e não executa ordens.**
 
-## Executar no Windows (mais simples)
+## Site publicado
+
+**https://don-invest.vercel.app** — hospedado na Vercel (região São Paulo), sem necessidade de instalar nada.
+
+- O histórico de pesquisas fica salvo no navegador de quem usa (até 8 relatórios); o servidor não guarda dados do usuário.
+- Para publicar uma nova versão: criar um novo deployment de produção do projeto `don-invest` na Vercel a partir do commit desejado (as publicações automáticas por push estão desativadas).
+- Mentor IA e cotações de ações exigem variáveis de ambiente no painel da Vercel (`ANTHROPIC_API_KEY`, `QUOTES_PROVIDER`/`QUOTES_API_KEY`).
+
+## Executar no Windows (opcional)
 
 1. Instale o **Node.js LTS** em https://nodejs.org (próximo, próximo, concluir).
 2. Baixe o projeto do GitHub: na página do repositório, escolha a branch `claude/inspiring-babbage-2hhvwp`, clique em **Code → Download ZIP** e extraia (ou use `git clone`, abaixo).
